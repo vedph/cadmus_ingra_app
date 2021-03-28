@@ -34,6 +34,10 @@ export class PrisonInfoPartComponent
       Validators.required,
       Validators.maxLength(200),
     ]);
+    this.form = formBuilder.group({
+      prisonId: this.prisonId,
+      place: this.place
+    });
   }
 
   public ngOnInit(): void {

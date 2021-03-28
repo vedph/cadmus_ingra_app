@@ -1,1 +1,10 @@
-<p>prison-info-part-feature works!</p>
+<cadmus-current-item-bar></cadmus-current-item-bar>
+<ingra-prison-info-part
+  [itemId]="itemId"
+  [roleId]="roleId"
+  [model]="part$ | async"
+  (modelChange)="save($event)"
+  [thesauri]="thesauri$ | async"
+  (editorClose)="close()"
+  (dirtyChange)="onDirtyChange($event)"
+></ingra-prison-info-part>
