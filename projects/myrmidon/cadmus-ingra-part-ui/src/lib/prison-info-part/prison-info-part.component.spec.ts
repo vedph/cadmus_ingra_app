@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CadmusIngraPartUiComponent } from './cadmus-ingra-part-ui.component';
+import { PrisonInfoPartComponent } from './prison-info-part.component';
 
-describe('CadmusIngraPartUiComponent', () => {
-  let component: CadmusIngraPartUiComponent;
-  let fixture: ComponentFixture<CadmusIngraPartUiComponent>;
+describe('PrisonInfoPartComponent', () => {
+  let component: PrisonInfoPartComponent;
+  let fixture: ComponentFixture<PrisonInfoPartComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CadmusIngraPartUiComponent ]
+      declarations: [ PrisonInfoPartComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CadmusIngraPartUiComponent);
+    fixture = TestBed.createComponent(PrisonInfoPartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

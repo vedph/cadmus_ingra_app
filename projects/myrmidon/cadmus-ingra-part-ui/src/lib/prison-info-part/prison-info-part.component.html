@@ -1,0 +1,57 @@
+<form [formGroup]="form" (submit)="save()">
+  <mat-card>
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon>picture_in_picture</mat-icon>
+      </div>
+      <mat-card-title>Prison Info Part</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div>
+        <!-- prisonId -->
+        <mat-form-field>
+          <input matInput [formControl]="prisonId" placeholder="ID" />
+          <mat-error
+            *ngIf="
+              prisonId.errors?.required && (prisonId.dirty || prisonId.touched)
+            "
+            >ID required</mat-error
+          >
+          <mat-error
+            *ngIf="
+              prisonId.errors?.maxLength && (prisonId.dirty || prisonId.touched)
+            "
+            >ID too long</mat-error
+          >
+          <mat-error
+            *ngIf="
+              prisonId.errors?.pattern && (prisonId.dirty || prisonId.touched)
+            "
+            >invalid ID</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div>
+        <!-- place -->
+        <mat-form-field>
+          <input matInput [formControl]="place" placeholder="place" />
+          <mat-error
+            *ngIf="place.errors?.required && (place.dirty || place.touched)"
+            >place required</mat-error
+          >
+          <mat-error
+            *ngIf="place.errors?.maxLength && (place.dirty || place.touched)"
+            >place too long</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <cadmus-close-save-buttons
+        [form]="form"
+        [noSave]="userLevel < 2"
+        (closeRequest)="close()"
+      ></cadmus-close-save-buttons>
+    </mat-card-actions>
+  </mat-card>
+</form>

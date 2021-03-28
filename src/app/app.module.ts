@@ -36,10 +36,7 @@ import { PART_EDITOR_KEYS } from './part-editor-keys';
 import { INDEX_LOOKUP_DEFINITIONS } from './index-lookup-definitions';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-  ],
+  declarations: [AppComponent, HomeComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -53,7 +50,9 @@ import { INDEX_LOOKUP_DEFINITIONS } from './index-lookup-definitions';
         {
           path: 'login',
           loadChildren: () =>
-            import('@myrmidon/cadmus-login').then((module) => module.CadmusLoginModule),
+            import('@myrmidon/cadmus-login').then(
+              (module) => module.CadmusLoginModule
+            ),
         },
         {
           path: 'items',
@@ -89,6 +88,14 @@ import { INDEX_LOOKUP_DEFINITIONS } from './index-lookup-definitions';
           canActivate: [AuthGuardService],
         },
         {
+          path: 'items/:iid/ingra',
+          loadChildren: () =>
+            import('@myrmidon/cadmus-ingra-part-pg').then(
+              (module) => module.CadmusIngraPartPgModule
+            ),
+          canActivate: [AuthGuardService],
+        },
+        {
           path: 'thesauri',
           loadChildren: () =>
             import('@myrmidon/cadmus-thesaurus-list').then(
@@ -107,13 +114,17 @@ import { INDEX_LOOKUP_DEFINITIONS } from './index-lookup-definitions';
         {
           path: 'admin',
           loadChildren: () =>
-            import('@myrmidon/cadmus-admin').then((module) => module.CadmusAdminModule),
+            import('@myrmidon/cadmus-admin').then(
+              (module) => module.CadmusAdminModule
+            ),
           canActivate: [AdminGuardService],
         },
         {
           path: 'user',
           loadChildren: () =>
-            import('@myrmidon/cadmus-user').then((module) => module.CadmusUserModule),
+            import('@myrmidon/cadmus-user').then(
+              (module) => module.CadmusUserModule
+            ),
           canActivate: [AuthGuardService],
         },
         {
@@ -134,10 +145,10 @@ import { INDEX_LOOKUP_DEFINITIONS } from './index-lookup-definitions';
         { path: '**', component: HomeComponent },
       ],
       {
-    initialNavigation: 'enabled',
-    useHash: true,
-    relativeLinkResolution: 'legacy'
-}
+        initialNavigation: 'enabled',
+        useHash: true,
+        relativeLinkResolution: 'legacy',
+      }
     ),
     // flex
     FlexLayoutModule,
@@ -152,7 +163,7 @@ import { INDEX_LOOKUP_DEFINITIONS } from './index-lookup-definitions';
     CadmusMaterialModule,
     CadmusPartGeneralUiModule,
     CadmusPartPhilologyUiModule,
-    CadmusUiModule
+    CadmusUiModule,
   ],
   providers: [
     EnvServiceProvider,

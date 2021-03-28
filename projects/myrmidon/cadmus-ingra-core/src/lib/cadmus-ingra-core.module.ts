@@ -1,12 +1,8 @@
 import { NgModule } from '@angular/core';
-import { CadmusIngraCoreComponent } from './cadmus-ingra-core.component';
-
-
 
 @NgModule({
-  declarations: [CadmusIngraCoreComponent],
-  imports: [
-  ],
-  exports: [CadmusIngraCoreComponent]
+  declarations: [],
+  imports: [],
+  exports: [],
 })
-export class CadmusIngraCoreModule { }
+export class CadmusIngraCoreModule {}
