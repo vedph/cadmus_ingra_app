@@ -2,6 +2,8 @@
  * Public API Surface of cadmus-ingra-part-ui
  */
 
+export * from './lib/graffiti-info-part';
+
 export * from './lib/prison-info-part';
 export * from './lib/prison-info-part/prison-info-part.component';
 
