@@ -4,17 +4,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CadmusMaterialModule } from '@myrmidon/cadmus-material';
 import { CadmusUiModule } from '@myrmidon/cadmus-ui';
 import { PrisonInfoPartComponent } from './prison-info-part/prison-info-part.component';
+import { GraffitiInfoPartComponent } from './graffiti-info-part/graffiti-info-part.component';
 
 @NgModule({
-  declarations: [PrisonInfoPartComponent],
+  declarations: [GraffitiInfoPartComponent, PrisonInfoPartComponent],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     // Cadmus
     CadmusMaterialModule,
-    CadmusUiModule
+    CadmusUiModule,
   ],
-  exports: [PrisonInfoPartComponent],
+  exports: [GraffitiInfoPartComponent, PrisonInfoPartComponent],
 })
 export class CadmusIngraPartUiModule {}

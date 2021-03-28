@@ -1,0 +1,227 @@
+<form [formGroup]="form" (submit)="save()">
+  <mat-card>
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon>picture_in_picture</mat-icon>
+      </div>
+      <mat-card-title>Graffiti Info Part</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-tab-group>
+        <mat-tab label="general">
+          <div>
+            <!-- graffitiId -->
+            <mat-form-field>
+              <input matInput [formControl]="graffitiId" placeholder="ID" />
+              <mat-error
+                *ngIf="
+                  graffitiId.errors?.required &&
+                  (graffitiId.dirty || graffitiId.touched)
+                "
+                >ID required</mat-error
+              >
+              <mat-error
+                *ngIf="
+                  graffitiId.errors?.maxLength &&
+                  (graffitiId.dirty || graffitiId.touched)
+                "
+                >ID too long</mat-error
+              >
+              <mat-error
+                *ngIf="
+                  graffitiId.errors?.pattern &&
+                  (graffitiId.dirty || graffitiId.touched)
+                "
+                >invalid ID</mat-error
+              >
+            </mat-form-field>
+
+            &nbsp;
+            <!-- language (bound) -->
+            <mat-form-field *ngIf="langEntries?.length" style="width: 8em">
+              <mat-select [formControl]="language" placeholder="language">
+                <mat-option *ngFor="let e of langEntries" [value]="e.id">{{
+                  e.value
+                }}</mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  language.errors?.required &&
+                  (language.dirty || language.touched)
+                "
+                >language required</mat-error
+              >
+              <mat-error
+                *ngIf="
+                  language.errors?.maxLength &&
+                  (language.dirty || language.touched)
+                "
+                >invalid language</mat-error
+              >
+            </mat-form-field>
+
+            <!-- language (free) -->
+            <mat-form-field *ngIf="!langEntries?.length" style="width: 8em">
+              <input matInput [formControl]="language" placeholder="language" />
+              <mat-error
+                *ngIf="
+                  language.errors?.required &&
+                  (language.dirty || language.touched)
+                "
+                >language required</mat-error
+              >
+              <mat-error
+                *ngIf="
+                  language.errors?.maxLength &&
+                  (language.dirty || language.touched)
+                "
+                >invalid language</mat-error
+              >
+            </mat-form-field>
+          </div>
+          <div>
+            <!-- verse (bound) -->
+            <mat-form-field *ngIf="verseEntries?.length" style="width: 8em">
+              <mat-select [formControl]="verse" placeholder="verse">
+                <mat-option [value]="null">(none)</mat-option>
+                <mat-option *ngFor="let e of verseEntries" [value]="e.id">{{
+                  e.value
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <!-- verse (free) -->
+            <mat-form-field *ngIf="!verseEntries?.length" style="width: 8em">
+              <input matInput [formControl]="verse" placeholder="verse" />
+              <mat-error
+                *ngIf="verse.errors?.required && (verse.dirty || verse.touched)"
+                >verse required</mat-error
+              >
+              <mat-error
+                *ngIf="
+                  verse.errors?.maxLength && (verse.dirty || verse.touched)
+                "
+                >verse too long</mat-error
+              >
+            </mat-form-field>
+
+            &nbsp;
+            <!-- rhyme -->
+            <mat-form-field>
+              <input matInput [formControl]="rhyme" placeholder="rhyme" />
+              <mat-error
+                *ngIf="
+                  rhyme.errors?.maxLength && (rhyme.dirty || rhyme.touched)
+                "
+                >rhyme too long</mat-error
+              >
+            </mat-form-field>
+          </div>
+          <div>
+            <!-- date -->
+            <cadmus-historical-date-editor
+              [date]="date?.value"
+              (dateChange)="onDateChange($event)"
+            ></cadmus-historical-date-editor>
+          </div>
+        </mat-tab>
+        <mat-tab label="author">
+          <div>
+            <!-- author -->
+          </div>
+          <h3>identifications</h3>
+          <div formArrayName="idents">
+            <div>
+              <button
+                type="button"
+                mat-icon-button
+                color="primary"
+                (click)="addIdent()"
+              >
+                <mat-icon>add_circle</mat-icon>
+                add identification
+              </button>
+            </div>
+            <div
+              *ngFor="
+                let item of idents.controls;
+                let i = index;
+                let first = first;
+                let last = last
+              "
+            >
+              <!-- child form -->
+              <div [formGroupName]="i">
+                <!-- child actions -->
+                {{ i + 1 }}.
+                <button
+                  mat-icon-button
+                  type="button"
+                  matTooltip="Remove this identification"
+                  color="warn"
+                  (click)="removeIdent(i)"
+                >
+                  <mat-icon>remove_circle</mat-icon>
+                </button>
+                <button
+                  [disabled]="first"
+                  mat-icon-button
+                  type="button"
+                  matTooltip="Move identification up"
+                  (click)="moveIdentUp(i)"
+                >
+                  <mat-icon>arrow_upward</mat-icon>
+                </button>
+                <button
+                  [disabled]="last"
+                  mat-icon-button
+                  type="button"
+                  matTooltip="Move identification down"
+                  (click)="moveIdentDown(i)"
+                >
+                  <mat-icon>arrow_downward</mat-icon>
+                </button>
+
+                <!-- child controls -->
+                <mat-form-field>
+                  <input matInput formControlName="id" placeholder="ID" />
+                  <mat-error
+                    *ngIf="
+                      $any(item)['controls'].id.errors?.required &&
+                      ($any(item)['controls'].id.dirty ||
+                        $any(item)['controls'].id.touched)
+                    "
+                    >ID required</mat-error
+                  >
+                  <mat-error
+                    *ngIf="
+                      $any(item)['controls'].id.errors?.maxLength &&
+                      ($any(item)['controls'].id.dirty ||
+                        $any(item)['controls'].id.touched)
+                    "
+                    >ID too long</mat-error
+                  >
+                  <mat-error
+                    *ngIf="
+                      $any(item)['controls'].id.errors?.pattern &&
+                      ($any(item)['controls'].id.dirty ||
+                        $any(item)['controls'].id.touched)
+                    "
+                    >invalid ID</mat-error
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+    <mat-card-actions>
+      <cadmus-close-save-buttons
+        [form]="form"
+        [noSave]="userLevel < 2"
+        (closeRequest)="close()"
+      ></cadmus-close-save-buttons>
+    </mat-card-actions>
+  </mat-card>
+</form>

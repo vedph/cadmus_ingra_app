@@ -1,11 +1,11 @@
-import { HistoricalDate, Part } from '@myrmidon/cadmus-core';
+import { HistoricalDateModel, Part } from '@myrmidon/cadmus-core';
 
 /**
  * An ID with a rank, used in GraffitiInfoPart.
  */
 export interface RankedId {
   id: string;
-  rank: number;
+  rank?: number;
 }
 
 /**
@@ -18,7 +18,7 @@ export interface GraffitiInfoPart extends Part {
   rhyme?: string;
   author?: string;
   identifications?: RankedId[];
-  date?: HistoricalDate;
+  date?: HistoricalDateModel;
 }
 
 /**
@@ -98,7 +98,7 @@ export const GRAFFITI_INFO_PART_SCHEMA = {
         anyOf: [
           {
             type: 'object',
-            required: ['id', 'rank'],
+            required: ['id'],
             properties: {
               id: {
                 type: 'string',
