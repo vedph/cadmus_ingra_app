@@ -1,0 +1,81 @@
+<form [formGroup]="form" (submit)="save()">
+  <mat-card>
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon>picture_in_picture</mat-icon>
+      </div>
+      <mat-card-title>Prison Location Part</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div>
+        <!-- prisonId -->
+        <mat-form-field>
+          <input matInput [formControl]="prisonId" placeholder="prison ID" />
+          <mat-error
+            *ngIf="
+              prisonId.errors?.required && (prisonId.dirty || prisonId.touched)
+            "
+            >prison ID required</mat-error
+          >
+          <mat-error
+            *ngIf="
+              prisonId.errors?.maxLength && (prisonId.dirty || prisonId.touched)
+            "
+            >prison ID too long</mat-error
+          >
+          <mat-error
+            *ngIf="
+              prisonId.errors?.pattern && (prisonId.dirty || prisonId.touched)
+            "
+            >invalid prison ID</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div>
+        <!-- cell -->
+        <mat-form-field>
+          <input matInput [formControl]="cell" placeholder="cell" />
+          <mat-error
+            *ngIf="cell.errors?.required && (cell.dirty || cell.touched)"
+            >cell required</mat-error
+          >
+          <mat-error
+            *ngIf="cell.errors?.maxLength && (cell.dirty || cell.touched)"
+            >cell too long</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div>
+        <!-- location -->
+        <mat-form-field>
+          <input matInput [formControl]="location" placeholder="location" />
+          <mat-error
+            *ngIf="
+              location.errors?.required && (location.dirty || location.touched)
+            "
+            >location required</mat-error
+          >
+          <mat-error
+            *ngIf="
+              location.errors?.maxLength && (location.dirty || location.touched)
+            "
+            >location too long</mat-error
+          >
+          <mat-error
+            *ngIf="
+              location.errors?.pattern && (location.dirty || location.touched)
+            "
+            >invalid location</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <cadmus-close-save-buttons
+        [form]="form"
+        [noSave]="userLevel < 2"
+        (closeRequest)="close()"
+      ></cadmus-close-save-buttons>
+    </mat-card-actions>
+  </mat-card>
+</form>

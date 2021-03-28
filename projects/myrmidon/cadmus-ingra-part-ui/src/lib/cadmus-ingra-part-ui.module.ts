@@ -5,9 +5,14 @@ import { CadmusMaterialModule } from '@myrmidon/cadmus-material';
 import { CadmusUiModule } from '@myrmidon/cadmus-ui';
 import { PrisonInfoPartComponent } from './prison-info-part/prison-info-part.component';
 import { GraffitiInfoPartComponent } from './graffiti-info-part/graffiti-info-part.component';
+import { PrisonLocationPartComponent } from './prison-location-part/prison-location-part.component';
 
 @NgModule({
-  declarations: [GraffitiInfoPartComponent, PrisonInfoPartComponent],
+  declarations: [
+    GraffitiInfoPartComponent,
+    PrisonInfoPartComponent,
+    PrisonLocationPartComponent,
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -16,6 +21,10 @@ import { GraffitiInfoPartComponent } from './graffiti-info-part/graffiti-info-pa
     CadmusMaterialModule,
     CadmusUiModule,
   ],
-  exports: [GraffitiInfoPartComponent, PrisonInfoPartComponent],
+  exports: [
+    GraffitiInfoPartComponent,
+    PrisonInfoPartComponent,
+    PrisonLocationPartComponent,
+  ],
 })
 export class CadmusIngraPartUiModule {}
