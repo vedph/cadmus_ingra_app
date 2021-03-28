@@ -2,6 +2,20 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": {
+      "@myrmidon/cadmus-ingra-core": [
+        "dist/myrmidon/cadmus-ingra-core/myrmidon-cadmus-ingra-core",
+        "dist/myrmidon/cadmus-ingra-core"
+      ],
+      "@myrmidon/cadmus-ingra-part-pg": [
+        "dist/myrmidon/cadmus-ingra-part-pg/myrmidon-cadmus-ingra-part-pg",
+        "dist/myrmidon/cadmus-ingra-part-pg"
+      ],
+      "@myrmidon/cadmus-ingra-part-ui": [
+        "dist/myrmidon/cadmus-ingra-part-ui/myrmidon-cadmus-ingra-part-ui",
+        "dist/myrmidon/cadmus-ingra-part-ui"
+      ]
+    },
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
@@ -19,7 +33,8 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "allowSyntheticDefaultImports": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
