@@ -1,18 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormBuilder,
+  Validators,
+  FormArray,
+  FormGroup,
+} from '@angular/forms';
 
-import { ModelEditorComponentBase, DialogService } from '@myrmidon/cadmus-ui';
+import { ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
 import { AuthService } from '@myrmidon/cadmus-api';
-import { ThesaurusEntry, deepCopy } from '@myrmidon/cadmus-core';
+import { ThesaurusEntry, deepCopy, HistoricalDateModel } from '@myrmidon/cadmus-core';
 
 import {
   DrawingInfoPart,
   DRAWING_INFO_PART_TYPEID,
+  TaggedId,
 } from '../drawing-info-part';
 
 /**
  * DrawingInfo editor component.
- * Thesauri: TODO thesauri names and optionality
+ * Thesauri: drawing-subjects (required); drawing-colors,
+ * link-reasons (all optional).
  */
 @Component({
   selector: 'ingra-drawing-info-part',
@@ -22,15 +30,42 @@ import {
 export class DrawingInfoPartComponent
   extends ModelEditorComponentBase<DrawingInfoPart>
   implements OnInit {
-  // TODO form controls (form: FormGroup is inherited)
+  public subjects: FormControl;
+  public description: FormControl;
+  public color: FormControl;
+  public date: FormControl;
+  public links: FormArray;
 
-  // TODO thesauri entries, e.g.:
-  // public tagEntries: ThesaurusEntry[];
+  // drawing-subjects
+  public dsEntries: ThesaurusEntry[] | undefined;
+  // drawing-colors
+  public dcEntries: ThesaurusEntry[] | undefined;
+  // link-reasons
+  public dlEntries: ThesaurusEntry[] | undefined;
 
-  constructor(authService: AuthService, formBuilder: FormBuilder) {
+  public editorOptions = {
+    theme: 'vs-light',
+    language: 'markdown',
+    wordWrap: 'on',
+    // https://github.com/atularen/ngx-monaco-editor/issues/19
+    automaticLayout: true,
+  };
+
+  constructor(authService: AuthService, private _formBuilder: FormBuilder) {
     super(authService);
     // form
-    // TODO build controls and set this.form
+    this.subjects = _formBuilder.control([]);
+    this.description = _formBuilder.control(null, Validators.maxLength(1000));
+    this.color = _formBuilder.control(null, Validators.maxLength(50));
+    this.date = _formBuilder.control(null);
+    this.links = _formBuilder.array([]);
+    this.form = _formBuilder.group({
+      subjects: this.subjects,
+      description: this.description,
+      color: this.color,
+      date: this.date,
+      links: this.links,
+    });
   }
 
   public ngOnInit(): void {
@@ -42,7 +77,16 @@ export class DrawingInfoPartComponent
       this.form.reset();
       return;
     }
-    // TODO set controls values from model
+    this.subjects.setValue(model.subjects || []);
+    this.description.setValue(model.description);
+    this.color.setValue(model.color);
+    this.date.setValue(model.date);
+    this.links.clear();
+    if (model.links) {
+      for (let l of model.links) {
+        this.links.controls.push(this.getLinkGroup(l));
+      }
+    }
     this.form.markAsPristine();
   }
 
@@ -51,14 +95,26 @@ export class DrawingInfoPartComponent
   }
 
   protected onThesauriSet(): void {
-    // TODO set entries from this.thesauri, e.g.:
-    // const key = 'note-tags';
-    // if (this.thesauri && this.thesauri[key]) {
-    // this.tagEntries = this.thesauri[key].entries;
-    // } else {
-    //   this.tagEntries = null;
-    // }
-    // if not using any thesauri, just remove this function
+    let key = 'drawing-subjects';
+    if (this.thesauri && this.thesauri[key]) {
+      this.dsEntries = this.thesauri[key].entries;
+    } else {
+      this.dsEntries = undefined;
+    }
+
+    key = 'drawing-colors';
+    if (this.thesauri && this.thesauri[key]) {
+      this.dcEntries = this.thesauri[key].entries;
+    } else {
+      this.dcEntries = undefined;
+    }
+
+    key = 'link-reasons';
+    if (this.thesauri && this.thesauri[key]) {
+      this.dlEntries = this.thesauri[key].entries;
+    } else {
+      this.dlEntries = undefined;
+    }
   }
 
   protected getModelFromForm(): DrawingInfoPart {
@@ -74,10 +130,76 @@ export class DrawingInfoPartComponent
         timeModified: new Date(),
         userId: '',
         description: '',
-        subjects: []
+        subjects: [],
       };
     }
-    // TODO
+    part.subjects = this.subjects.value;
+    part.description = this.description.value;
+    part.color = this.color.value;
+    part.date = this.date.value;
+    part.links = this.getLinks();
+
     return part;
+  }
+
+  private getLinkGroup(link?: TaggedId): FormGroup {
+    return this._formBuilder.group({
+      id: this._formBuilder.control(link?.id, [
+        Validators.required,
+        Validators.maxLength(50),
+        Validators.pattern('^[-a-zA-Z0-9_]+$'),
+      ]),
+      tag: this._formBuilder.control(link?.tag, Validators.maxLength(50)),
+    });
+  }
+
+  public addLink(item?: TaggedId): void {
+    this.links.push(this.getLinkGroup(item));
+    this.links.markAsDirty();
+  }
+
+  public removeLink(index: number): void {
+    this.links.removeAt(index);
+    this.links.markAsDirty();
+  }
+
+  public moveLinkUp(index: number): void {
+    if (index < 1) {
+      return;
+    }
+    const item = this.links.controls[index];
+    this.links.removeAt(index);
+    this.links.insert(index - 1, item);
+    this.links.markAsDirty();
+  }
+
+  public moveLinkDown(index: number): void {
+    if (index + 1 >= this.links.length) {
+      return;
+    }
+    const item = this.links.controls[index];
+    this.links.removeAt(index);
+    this.links.insert(index + 1, item);
+    this.links.markAsDirty();
+  }
+
+  private getLinks(): TaggedId[] | undefined {
+    const entries: TaggedId[] = [];
+    for (let i = 0; i < this.links.length; i++) {
+      const g = this.links.at(i) as FormGroup;
+      entries.push({
+        id: g.controls.id.value?.trim(),
+        tag: g.controls.tag.value?.trim(),
+      });
+    }
+    return entries.length ? entries : undefined;
+  }
+
+  public onSubjectSelectionChange(ids: string[]): void {
+    this.subjects.setValue(ids || []);
+  }
+
+  public onDateChange(date: HistoricalDateModel): void {
+    this.date.setValue(date);
   }
 }

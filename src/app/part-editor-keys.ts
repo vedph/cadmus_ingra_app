@@ -10,6 +10,7 @@ import {
 import { APPARATUS_FRAGMENT_TYPEID } from '@myrmidon/cadmus-part-philology-ui';
 import { PartEditorKeys } from '@myrmidon/cadmus-core';
 import {
+  DRAWING_INFO_PART_TYPEID,
   GRAFFITI_INFO_PART_TYPEID,
   PRISONER_INFO_PART_TYPEID,
   PRISON_INFO_PART_TYPEID,
@@ -47,6 +48,9 @@ export const PART_EDITOR_KEYS: PartEditorKeys = {
     part: GENERAL,
   },
   // ingra parts
+  [DRAWING_INFO_PART_TYPEID]: {
+    part: INGRA,
+  },
   [GRAFFITI_INFO_PART_TYPEID]: {
     part: INGRA,
   },

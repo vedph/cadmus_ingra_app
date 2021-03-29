@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   CadmusIngraPartUiModule,
+  DRAWING_INFO_PART_TYPEID,
   GRAFFITI_INFO_PART_TYPEID,
   PRISONER_INFO_PART_TYPEID,
   PRISON_INFO_PART_TYPEID,
@@ -18,8 +19,15 @@ import { PrisonInfoPartFeatureComponent } from './prison-info-part-feature/priso
 import { GraffitiInfoPartFeatureComponent } from './graffiti-info-part-feature/graffiti-info-part-feature.component';
 import { PrisonLocationPartFeatureComponent } from './prison-location-part-feature/prison-location-part-feature.component';
 import { PrisonerInfoPartFeatureComponent } from './prisoner-info-part-feature/prisoner-info-part-feature.component';
+import { DrawingInfoPartFeatureComponent } from './drawing-info-part-feature/drawing-info-part-feature.component';
 
 export const RouterModuleForChild = RouterModule.forChild([
+  {
+    path: `${DRAWING_INFO_PART_TYPEID}/:pid`,
+    pathMatch: 'full',
+    component: DrawingInfoPartFeatureComponent,
+    canDeactivate: [PendingChangesGuard],
+  },
   {
     path: `${GRAFFITI_INFO_PART_TYPEID}/:pid`,
     pathMatch: 'full',
@@ -48,6 +56,7 @@ export const RouterModuleForChild = RouterModule.forChild([
 
 @NgModule({
   declarations: [
+    DrawingInfoPartFeatureComponent,
     GraffitiInfoPartFeatureComponent,
     PrisonInfoPartFeatureComponent,
     PrisonerInfoPartFeatureComponent,
@@ -67,6 +76,7 @@ export const RouterModuleForChild = RouterModule.forChild([
     CadmusIngraPartUiModule,
   ],
   exports: [
+    DrawingInfoPartFeatureComponent,
     GraffitiInfoPartFeatureComponent,
     PrisonInfoPartFeatureComponent,
     PrisonerInfoPartFeatureComponent,

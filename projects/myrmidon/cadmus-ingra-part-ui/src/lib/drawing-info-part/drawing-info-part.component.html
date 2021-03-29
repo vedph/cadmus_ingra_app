@@ -1,1 +1,173 @@
-<p>drawing-info-part works!</p>
+<form [formGroup]="form" (submit)="save()">
+  <mat-card>
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon>picture_in_picture</mat-icon>
+      </div>
+      <mat-card-title>Drawing Info Part</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-tab-group>
+        <mat-tab label="general">
+          <div>
+            <!-- subjects (bound) -->
+            <cadmus-multi-entry-selector
+              [numbering]="true"
+              [entries]="dsEntries"
+              [selectedIds]="subjects?.value"
+              (selectionChange)="onSubjectSelectionChange($event)"
+            ></cadmus-multi-entry-selector>
+          </div>
+          <div>
+            <!-- color (bound) -->
+            <mat-form-field *ngIf="dcEntries?.length" style="width: 8em">
+              <mat-select [formControl]="color" placeholder="color">
+                <mat-option [value]="null">---</mat-option>
+                <mat-option *ngFor="let e of dcEntries" [value]="e.id">{{
+                  e.value
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <!-- color (free) -->
+            <mat-form-field *ngIf="!dcEntries?.length" style="width: 8em">
+              <input matInput [formControl]="color" placeholder="color" />
+              <mat-error
+                *ngIf="
+                  color.errors?.maxLength && (color.dirty || color.touched)
+                "
+                >color too long</mat-error
+              >
+            </mat-form-field>
+          </div>
+          <div>
+            <!-- date -->
+            <cadmus-historical-date-editor
+              [date]="date?.value"
+              (dateChange)="onDateChange($event)"
+            ></cadmus-historical-date-editor>
+          </div>
+          <div>
+            <!-- description -->
+            <ngx-monaco-editor
+              [options]="editorOptions"
+              [formControl]="description"
+            ></ngx-monaco-editor>
+            <mat-error
+              *ngIf="
+                description.errors?.maxLength &&
+                (description.touched || description.dirty)
+              "
+              >description too long</mat-error
+            >
+          </div>
+        </mat-tab>
+        <mat-tab label="trial">
+          <!-- links -->
+          <div formArrayName="links">
+            <div>
+              <button
+                type="button"
+                mat-icon-button
+                color="primary"
+                (click)="addLink()"
+              >
+                <mat-icon>add_circle</mat-icon>
+                add link
+              </button>
+            </div>
+            <div
+              *ngFor="
+                let item of links.controls;
+                let i = index;
+                let first = first;
+                let last = last
+              "
+            >
+              <!-- child form -->
+              <div [formGroupName]="i">
+                <!-- child actions -->
+                {{ i + 1 }}.
+                <button
+                  mat-icon-button
+                  type="button"
+                  matTooltip="Remove this link"
+                  color="warn"
+                  (click)="removeLink(i)"
+                >
+                  <mat-icon>remove_circle</mat-icon>
+                </button>
+                <button
+                  [disabled]="first"
+                  mat-icon-button
+                  type="button"
+                  matTooltip="Move link up"
+                  (click)="moveLinkUp(i)"
+                >
+                  <mat-icon>arrow_upward</mat-icon>
+                </button>
+                <button
+                  [disabled]="last"
+                  mat-icon-button
+                  type="button"
+                  matTooltip="Move link down"
+                  (click)="moveLinkDown(i)"
+                >
+                  <mat-icon>arrow_downward</mat-icon>
+                </button>
+
+                <!-- child controls -->
+                <mat-form-field>
+                  <input matInput formControlName="id" placeholder="ID" />
+                  <mat-error
+                    *ngIf="
+                      $any(item)['controls'].id.errors?.required &&
+                      ($any(item)['controls'].id.dirty ||
+                        $any(item)['controls'].id.touched)
+                    "
+                    >ID required</mat-error
+                  >
+                  <mat-error
+                    *ngIf="
+                      $any(item)['controls'].id.errors?.maxLength &&
+                      ($any(item)['controls'].id.dirty ||
+                        $any(item)['controls'].id.touched)
+                    "
+                    >ID too long</mat-error
+                  >
+                </mat-form-field>
+                &nbsp;
+                <mat-form-field>
+                  <input matInput formControlName="tag" placeholder="tag" />
+                  <mat-error
+                    *ngIf="
+                      $any(item)['controls'].tag.errors?.required &&
+                      ($any(item)['controls'].tag.dirty ||
+                        $any(item)['controls'].tag.touched)
+                    "
+                    >tag required</mat-error
+                  >
+                  <mat-error
+                    *ngIf="
+                      $any(item)['controls'].tag.errors?.maxLength &&
+                      ($any(item)['controls'].tag.dirty ||
+                        $any(item)['controls'].tag.touched)
+                    "
+                    >tag too long</mat-error
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+    <mat-card-actions>
+      <cadmus-close-save-buttons
+        [form]="form"
+        [noSave]="userLevel < 2"
+        (closeRequest)="close()"
+      ></cadmus-close-save-buttons>
+    </mat-card-actions>
+  </mat-card>
+</form>
