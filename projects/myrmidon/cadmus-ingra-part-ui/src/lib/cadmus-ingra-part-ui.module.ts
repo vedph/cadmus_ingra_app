@@ -9,9 +9,11 @@ import { PrisonLocationPartComponent } from './prison-location-part/prison-locat
 import { CadmusItineraUiModule } from '@myrmidon/cadmus-itinera-ui';
 import { CadmusItineraCoreModule } from '@myrmidon/cadmus-itinera-core';
 import { PrisonerInfoPartComponent } from './prisoner-info-part/prisoner-info-part.component';
+import { DrawingInfoPartComponent } from './drawing-info-part/drawing-info-part.component';
 
 @NgModule({
   declarations: [
+    DrawingInfoPartComponent,
     GraffitiInfoPartComponent,
     PrisonInfoPartComponent,
     PrisonerInfoPartComponent,
@@ -28,6 +30,7 @@ import { PrisonerInfoPartComponent } from './prisoner-info-part/prisoner-info-pa
     CadmusItineraUiModule
   ],
   exports: [
+    DrawingInfoPartComponent,
     GraffitiInfoPartComponent,
     PrisonInfoPartComponent,
     PrisonerInfoPartComponent,

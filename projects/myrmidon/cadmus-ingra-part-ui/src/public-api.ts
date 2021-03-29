@@ -2,6 +2,9 @@
  * Public API Surface of cadmus-ingra-part-ui
  */
 
+export * from './lib/drawing-info-part';
+export * from './lib/drawing-info-part/drawing-info-part.component';
+
 export * from './lib/graffiti-info-part';
 export * from './lib/graffiti-info-part/graffiti-info-part.component';
 
