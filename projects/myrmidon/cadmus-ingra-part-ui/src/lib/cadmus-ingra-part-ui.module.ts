@@ -10,6 +10,7 @@ import { CadmusItineraUiModule } from '@myrmidon/cadmus-itinera-ui';
 import { CadmusItineraCoreModule } from '@myrmidon/cadmus-itinera-core';
 import { PrisonerInfoPartComponent } from './prisoner-info-part/prisoner-info-part.component';
 import { DrawingInfoPartComponent } from './drawing-info-part/drawing-info-part.component';
+import { MonacoEditorModule } from 'ngx-monaco-editor';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { DrawingInfoPartComponent } from './drawing-info-part/drawing-info-part.
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    MonacoEditorModule,
     // Cadmus
     CadmusMaterialModule,
     CadmusUiModule,

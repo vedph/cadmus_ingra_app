@@ -54,7 +54,7 @@ export class DrawingInfoPartComponent
   constructor(authService: AuthService, private _formBuilder: FormBuilder) {
     super(authService);
     // form
-    this.subjects = _formBuilder.control([]);
+    this.subjects = _formBuilder.control([], Validators.required);
     this.description = _formBuilder.control(null, Validators.maxLength(1000));
     this.color = _formBuilder.control(null, Validators.maxLength(50));
     this.date = _formBuilder.control(null);
