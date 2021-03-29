@@ -11,10 +11,75 @@
         <mat-tab label="general">
           <div>
             <!-- prisonerId -->
+            <mat-form-field>
+              <input
+                matInput
+                [formControl]="prisonerId"
+                placeholder="prisoner ID"
+              />
+              <mat-error
+                *ngIf="
+                  prisonerId.errors?.required &&
+                  (prisonerId.dirty || prisonerId.touched)
+                "
+                >ID required</mat-error
+              >
+              <mat-error
+                *ngIf="
+                  prisonerId.errors?.maxLength &&
+                  (prisonerId.dirty || prisonerId.touched)
+                "
+                >ID too long</mat-error
+              >
+              <mat-error
+                *ngIf="
+                  prisonerId.errors?.pattern &&
+                  (prisonerId.dirty || prisonerId.touched)
+                "
+                >invalid ID</mat-error
+              >
+            </mat-form-field>
+
             &nbsp;
             <!-- prisonId -->
+            <mat-form-field>
+              <input
+                matInput
+                [formControl]="prisonId"
+                placeholder="prison ID"
+              />
+              <mat-error
+                *ngIf="
+                  prisonId.errors?.required &&
+                  (prisonId.dirty || prisonId.touched)
+                "
+                >ID required</mat-error
+              >
+              <mat-error
+                *ngIf="
+                  prisonId.errors?.maxLength &&
+                  (prisonId.dirty || prisonId.touched)
+                "
+                >ID too long</mat-error
+              >
+              <mat-error
+                *ngIf="
+                  prisonId.errors?.pattern &&
+                  (prisonId.dirty || prisonId.touched)
+                "
+                >invalid ID</mat-error
+              >
+            </mat-form-field>
+
             &nbsp;
             <!-- sex -->
+            <mat-form-field style="width: 5em">
+              <mat-select [formControl]="sex" placeholder="sex">
+                <mat-option [value]="undefined">---</mat-option>
+                <mat-option [value]="'M'">male</mat-option>
+                <mat-option [value]="'F'">female</mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
           <div>
             <!-- name -->
@@ -27,6 +92,15 @@
           </div>
           <div>
             <!-- origin -->
+            <mat-form-field>
+              <input matInput [formControl]="origin" placeholder="origin" />
+              <mat-error
+                *ngIf="
+                  origin.errors?.maxLength && (origin.dirty || origin.touched)
+                "
+                >origin too long</mat-error
+              >
+            </mat-form-field>
           </div>
           <div>
             <!-- birth -->
@@ -46,11 +120,52 @@
         <mat-tab label="trial">
           <div>
             <!-- charge (bound) -->
+            <mat-form-field *ngIf="trChargeEntries?.length">
+              <mat-select [formControl]="charge" placeholder="charge">
+                <mat-option *ngFor="let e of trChargeEntries" [value]="e.id">{{
+                  e.value
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
             <!-- charge (free) -->
+            <mat-form-field *ngIf="!trChargeEntries?.length">
+              <input matInput [formControl]="charge" placeholder="charge" />
+              <mat-error
+                *ngIf="
+                  charge.errors?.maxLength && (charge.dirty || charge.touched)
+                "
+                >charge too long</mat-error
+              >
+            </mat-form-field>
           </div>
           <div>
             <!-- judgement (bound) -->
+            <mat-form-field *ngIf="trJudgementEntries?.length">
+              <mat-select [formControl]="judgement" placeholder="judgement">
+                <mat-option
+                  *ngFor="let e of trJudgementEntries"
+                  [value]="e.id"
+                  >{{ e.value }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+
             <!-- judgement (free) -->
+            <mat-form-field *ngIf="!trJudgementEntries?.length">
+              <input
+                matInput
+                [formControl]="judgement"
+                placeholder="judgement"
+              />
+              <mat-error
+                *ngIf="
+                  judgement.errors?.maxLength &&
+                  (judgement.dirty || judgement.touched)
+                "
+                >judgement too long</mat-error
+              >
+            </mat-form-field>
           </div>
           <h3>detention period</h3>
           <div>

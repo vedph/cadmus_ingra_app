@@ -11,6 +11,7 @@ import { APPARATUS_FRAGMENT_TYPEID } from '@myrmidon/cadmus-part-philology-ui';
 import { PartEditorKeys } from '@myrmidon/cadmus-core';
 import {
   GRAFFITI_INFO_PART_TYPEID,
+  PRISONER_INFO_PART_TYPEID,
   PRISON_INFO_PART_TYPEID,
   PRISON_LOCATION_PART_TYPEID,
 } from '@myrmidon/cadmus-ingra-part-ui';
@@ -50,6 +51,9 @@ export const PART_EDITOR_KEYS: PartEditorKeys = {
     part: INGRA,
   },
   [PRISON_INFO_PART_TYPEID]: {
+    part: INGRA,
+  },
+  [PRISONER_INFO_PART_TYPEID]: {
     part: INGRA,
   },
   [PRISON_LOCATION_PART_TYPEID]: {
