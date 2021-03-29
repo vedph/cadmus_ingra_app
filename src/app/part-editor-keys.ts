@@ -12,6 +12,7 @@ import { PartEditorKeys } from '@myrmidon/cadmus-core';
 import {
   GRAFFITI_INFO_PART_TYPEID,
   PRISON_INFO_PART_TYPEID,
+  PRISON_LOCATION_PART_TYPEID,
 } from '@myrmidon/cadmus-ingra-part-ui';
 
 const GENERAL = 'general';
@@ -49,6 +50,9 @@ export const PART_EDITOR_KEYS: PartEditorKeys = {
     part: INGRA,
   },
   [PRISON_INFO_PART_TYPEID]: {
+    part: INGRA,
+  },
+  [PRISON_LOCATION_PART_TYPEID]: {
     part: INGRA,
   },
   // layer parts

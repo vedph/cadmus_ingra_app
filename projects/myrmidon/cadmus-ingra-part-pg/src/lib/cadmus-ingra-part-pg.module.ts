@@ -5,6 +5,7 @@ import {
   CadmusIngraPartUiModule,
   GRAFFITI_INFO_PART_TYPEID,
   PRISON_INFO_PART_TYPEID,
+  PRISON_LOCATION_PART_TYPEID,
 } from '@myrmidon/cadmus-ingra-part-ui';
 import { RouterModule } from '@angular/router';
 import { CadmusCoreModule, PendingChangesGuard } from '@myrmidon/cadmus-core';
@@ -14,6 +15,7 @@ import { CadmusUiModule } from '@myrmidon/cadmus-ui';
 import { CadmusUiPgModule } from '@myrmidon/cadmus-ui-pg';
 import { PrisonInfoPartFeatureComponent } from './prison-info-part-feature/prison-info-part-feature.component';
 import { GraffitiInfoPartFeatureComponent } from './graffiti-info-part-feature/graffiti-info-part-feature.component';
+import { PrisonLocationPartFeatureComponent } from './prison-location-part-feature/prison-location-part-feature.component';
 
 export const RouterModuleForChild = RouterModule.forChild([
   {
@@ -28,12 +30,19 @@ export const RouterModuleForChild = RouterModule.forChild([
     component: PrisonInfoPartFeatureComponent,
     canDeactivate: [PendingChangesGuard],
   },
+  {
+    path: `${PRISON_LOCATION_PART_TYPEID}/:pid`,
+    pathMatch: 'full',
+    component: PrisonLocationPartFeatureComponent,
+    canDeactivate: [PendingChangesGuard]
+  },
 ]);
 
 @NgModule({
   declarations: [
     GraffitiInfoPartFeatureComponent,
     PrisonInfoPartFeatureComponent,
+    PrisonLocationPartFeatureComponent,
   ],
   imports: [
     CommonModule,
@@ -48,6 +57,10 @@ export const RouterModuleForChild = RouterModule.forChild([
     CadmusUiPgModule,
     CadmusIngraPartUiModule,
   ],
-  exports: [GraffitiInfoPartFeatureComponent, PrisonInfoPartFeatureComponent],
+  exports: [
+    GraffitiInfoPartFeatureComponent,
+    PrisonInfoPartFeatureComponent,
+    PrisonLocationPartFeatureComponent,
+  ],
 })
 export class CadmusIngraPartPgModule {}
