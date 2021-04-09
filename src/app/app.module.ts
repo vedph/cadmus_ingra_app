@@ -34,8 +34,6 @@ import {
 } from '@myrmidon/cadmus-api';
 import { PART_EDITOR_KEYS } from './part-editor-keys';
 import { INDEX_LOOKUP_DEFINITIONS } from './index-lookup-definitions';
-//@@TEMP
-import { CadmusIngraPartUiModule } from 'projects/myrmidon/cadmus-ingra-part-ui/src/public-api';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
@@ -166,8 +164,6 @@ import { CadmusIngraPartUiModule } from 'projects/myrmidon/cadmus-ingra-part-ui/
     CadmusPartGeneralUiModule,
     CadmusPartPhilologyUiModule,
     CadmusUiModule,
-    //@@TEMP
-    CadmusIngraPartUiModule
   ],
   providers: [
     EnvServiceProvider,

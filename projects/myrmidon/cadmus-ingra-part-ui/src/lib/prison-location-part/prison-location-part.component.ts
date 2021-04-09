@@ -3,7 +3,7 @@ import { FormControl, FormBuilder, Validators } from '@angular/forms';
 
 import { ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
 import { AuthService } from '@myrmidon/cadmus-api';
-import { deepCopy } from '@myrmidon/cadmus-core';
+import { DataPinInfo, deepCopy } from '@myrmidon/cadmus-core';
 
 import {
   PrisonLocationPart,
@@ -29,11 +29,7 @@ export class PrisonLocationPartComponent
   constructor(authService: AuthService, formBuilder: FormBuilder) {
     super(authService);
     // form
-    this.prisonId = formBuilder.control(null, [
-      Validators.required,
-      Validators.maxLength(50),
-      Validators.pattern('^[-a-zA-Z_0-9]+$'),
-    ]);
+    this.prisonId = formBuilder.control(null, Validators.required);
     this.cell = formBuilder.control(null, [
       Validators.required,
       Validators.maxLength(50),
@@ -86,9 +82,14 @@ export class PrisonLocationPartComponent
         location: '',
       };
     }
-    part.prisonId = this.prisonId.value?.trim();
+    part.prisonId = this.prisonId.value?.value;
     part.cell = this.cell.value?.trim();
     part.location = this.location.value?.trim();
     return part;
+  }
+
+  public onPrisonEntryChange(entry: DataPinInfo | null): void {
+    this.prisonId.setValue(entry);
+    this.form.markAsDirty();
   }
 }

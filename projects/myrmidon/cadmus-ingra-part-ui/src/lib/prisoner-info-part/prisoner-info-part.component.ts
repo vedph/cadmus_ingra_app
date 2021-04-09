@@ -3,7 +3,12 @@ import { FormControl, FormBuilder, Validators } from '@angular/forms';
 
 import { ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
 import { AuthService } from '@myrmidon/cadmus-api';
-import { ThesaurusEntry, deepCopy, HistoricalDateModel } from '@myrmidon/cadmus-core';
+import {
+  ThesaurusEntry,
+  deepCopy,
+  HistoricalDateModel,
+  DataPinInfo,
+} from '@myrmidon/cadmus-core';
 
 import {
   PrisonerInfoPart,
@@ -55,7 +60,7 @@ export class PrisonerInfoPartComponent
     super(authService);
     this.personName$ = new BehaviorSubject<PersonName>({
       language: 'ita',
-      parts: []
+      parts: [],
     });
     // form
     this.prisonerId = formBuilder.control(null, [
@@ -63,11 +68,7 @@ export class PrisonerInfoPartComponent
       Validators.maxLength(50),
       Validators.pattern('^[-a-zA-Z_0-9]+$'),
     ]);
-    this.prisonId = formBuilder.control(null, [
-      Validators.required,
-      Validators.maxLength(50),
-      Validators.pattern('^[-a-zA-Z_0-9]+$'),
-    ]);
+    this.prisonId = formBuilder.control(null, Validators.required);
     this.sex = formBuilder.control(null);
     this.name = formBuilder.control(null, Validators.required);
     this.origin = formBuilder.control(null, Validators.maxLength(50));
@@ -88,13 +89,13 @@ export class PrisonerInfoPartComponent
       charge: this.charge,
       judgement: this.judgement,
       detStart: this.detStart,
-      detEnd: this.detEnd
+      detEnd: this.detEnd,
     });
   }
 
   public ngOnInit(): void {
     this.initEditor();
-    this.personName$.subscribe(n => {
+    this.personName$.subscribe((n) => {
       this.name.setValue(n);
     });
   }
@@ -176,7 +177,7 @@ export class PrisonerInfoPartComponent
       };
     }
     part.prisonerId = this.prisonerId.value?.trim();
-    part.prisonId = this.prisonId.value?.trim();
+    part.prisonId = this.prisonId.value?.value;
     part.sex = this.sex.value;
     part.name = this.name.value;
     part.origin = this.origin.value?.trim();
@@ -187,6 +188,11 @@ export class PrisonerInfoPartComponent
     part.detentionStart = this.detStart.value;
     part.detentionEnd = this.detEnd.value;
     return part;
+  }
+
+  public onPrisonEntryChange(entry: DataPinInfo | null): void {
+    this.prisonId.setValue(entry);
+    this.form.markAsDirty();
   }
 
   public onBirthDateChange(date: HistoricalDateModel): void {

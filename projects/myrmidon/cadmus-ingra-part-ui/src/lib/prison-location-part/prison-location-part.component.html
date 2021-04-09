@@ -9,7 +9,13 @@
     <mat-card-content>
       <div>
         <!-- prisonId -->
-        <mat-form-field>
+        <ingra-lookup-pin
+          lookupKey="prison"
+          label="prison"
+          [initialName]="prisonId?.value"
+          (entryChange)="onPrisonEntryChange($event)"
+        ></ingra-lookup-pin>
+        <!-- <mat-form-field>
           <input matInput [formControl]="prisonId" placeholder="prison ID" />
           <mat-error
             *ngIf="
@@ -29,7 +35,7 @@
             "
             >invalid prison ID</mat-error
           >
-        </mat-form-field>
+        </mat-form-field> -->
       </div>
       <div>
         <!-- cell -->

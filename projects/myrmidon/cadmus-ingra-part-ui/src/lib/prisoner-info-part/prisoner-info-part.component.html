@@ -41,8 +41,23 @@
             </mat-form-field>
 
             &nbsp;
+            <!-- sex -->
+            <mat-form-field style="width: 5em">
+              <mat-select [formControl]="sex" placeholder="sex">
+                <mat-option [value]="undefined">---</mat-option>
+                <mat-option [value]="'M'">male</mat-option>
+                <mat-option [value]="'F'">female</mat-option>
+              </mat-select>
+            </mat-form-field>
+
             <!-- prisonId -->
-            <mat-form-field>
+            <ingra-lookup-pin
+              lookupKey="prison"
+              label="prison"
+              [initialName]="prisonId?.value"
+              (entryChange)="onPrisonEntryChange($event)"
+            ></ingra-lookup-pin>
+            <!-- <mat-form-field>
               <input
                 matInput
                 [formControl]="prisonId"
@@ -69,17 +84,7 @@
                 "
                 >invalid ID</mat-error
               >
-            </mat-form-field>
-
-            &nbsp;
-            <!-- sex -->
-            <mat-form-field style="width: 5em">
-              <mat-select [formControl]="sex" placeholder="sex">
-                <mat-option [value]="undefined">---</mat-option>
-                <mat-option [value]="'M'">male</mat-option>
-                <mat-option [value]="'F'">female</mat-option>
-              </mat-select>
-            </mat-form-field>
+            </mat-form-field> -->
           </div>
           <h4>name</h4>
           <div>
