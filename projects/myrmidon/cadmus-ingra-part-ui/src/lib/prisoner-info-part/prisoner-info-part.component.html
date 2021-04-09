@@ -86,8 +86,8 @@
             <!-- name -->
             <itinera-person-name
               [model$]="personName$"
-              [langEntries]="pnLangEntries"
-              [typeEntries]="pnTypeEntries"
+              [langEntries]="pnLangEntries || []"
+              [typeEntries]="pnTypeEntries || []"
             >
             </itinera-person-name>
           </div>
