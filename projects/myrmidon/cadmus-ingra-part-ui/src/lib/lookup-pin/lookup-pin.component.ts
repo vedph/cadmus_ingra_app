@@ -18,7 +18,6 @@ import { Observable, of } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
-  startWith,
   switchMap,
   take,
 } from 'rxjs/operators';
@@ -101,7 +100,6 @@ export class LookupPinComponent implements OnInit {
 
   ngOnInit(): void {
     this.entries$ = this.lookup.valueChanges.pipe(
-      // startWith(this._initialName),
       debounceTime(300),
       distinctUntilChanged(),
       switchMap((value: DataPinInfo | string) => {
@@ -119,9 +117,12 @@ export class LookupPinComponent implements OnInit {
     }
   }
 
-  private lookupEntries(filter: any, limit: number): Observable<DataPinInfo[]> {
+  private lookupEntries(
+    filter: string,
+    limit: number
+  ): Observable<DataPinInfo[]> {
     // get the lookup definition
-    if (!this.lookupKey) {
+    if (!this.lookupKey || !filter) {
       return of([]);
     }
     const ld = this._lookupDefs[this.lookupKey];
@@ -147,7 +148,7 @@ export class LookupPinComponent implements OnInit {
   }
 
   private resetToInitial(): void {
-    this.lookupEntries(this._initialName, 1)
+    this.lookupEntries(this._initialName || '', 1)
       .pipe(take(1))
       .subscribe((entries) => {
         this.lookup.setValue(entries.length ? entries[0] : undefined);

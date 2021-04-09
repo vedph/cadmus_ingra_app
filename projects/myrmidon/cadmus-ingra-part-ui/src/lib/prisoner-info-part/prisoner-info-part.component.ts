@@ -43,6 +43,7 @@ export class PrisonerInfoPartComponent
   public detStart: FormControl;
   public detEnd: FormControl;
 
+  public orPrisonId: string | undefined;
   public personName$: BehaviorSubject<PersonName>;
 
   // person-name-languages
@@ -106,7 +107,11 @@ export class PrisonerInfoPartComponent
       return;
     }
     this.prisonerId.setValue(model.prisonerId);
-    this.prisonId.setValue(model.prisonId);
+    // setting the original prison ID will cause
+    // the lookup bound to prisonId to fetch the
+    // corresponding data pin and thus set prisonId back
+    this.orPrisonId = model.prisonId;
+    // this.prisonId.setValue(model.prisonId);
     this.sex.setValue(model.sex);
     this.name.setValue(model.name);
     this.origin.setValue(model.origin);
