@@ -46,7 +46,7 @@ export class LookupPinComponent implements OnInit {
   public set initialName(value: string | undefined) {
     this._initialName = value;
     if (this.lookup) {
-      this.lookup.setValue(value);
+      this.resetToInitial();
     }
   }
 
@@ -115,11 +115,7 @@ export class LookupPinComponent implements OnInit {
     );
     // setup initial value if its name was specified
     if (this._initialName) {
-      this.lookupEntries(this._initialName, 1)
-        .pipe(take(1))
-        .subscribe((i) => {
-          this.lookup.setValue(i);
-        });
+      this.resetToInitial();
     }
   }
 
@@ -148,6 +144,14 @@ export class LookupPinComponent implements OnInit {
         }
       })
     );
+  }
+
+  private resetToInitial(): void {
+    this.lookupEntries(this._initialName, 1)
+      .pipe(take(1))
+      .subscribe((entries) => {
+        this.lookup.setValue(entries.length ? entries[0] : undefined);
+      });
   }
 
   public clear(): void {
