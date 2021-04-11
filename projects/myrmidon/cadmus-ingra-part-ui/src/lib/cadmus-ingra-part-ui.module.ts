@@ -11,13 +11,11 @@ import { CadmusItineraCoreModule } from '@myrmidon/cadmus-itinera-core';
 import { PrisonerInfoPartComponent } from './prisoner-info-part/prisoner-info-part.component';
 import { DrawingInfoPartComponent } from './drawing-info-part/drawing-info-part.component';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
-import { LookupPinComponent } from './lookup-pin/lookup-pin.component';
 
 @NgModule({
   declarations: [
     DrawingInfoPartComponent,
     GraffitiInfoPartComponent,
-    LookupPinComponent,
     PrisonInfoPartComponent,
     PrisonerInfoPartComponent,
     PrisonLocationPartComponent,
@@ -36,7 +34,6 @@ import { LookupPinComponent } from './lookup-pin/lookup-pin.component';
   exports: [
     DrawingInfoPartComponent,
     GraffitiInfoPartComponent,
-    LookupPinComponent,
     PrisonInfoPartComponent,
     PrisonerInfoPartComponent,
     PrisonLocationPartComponent,

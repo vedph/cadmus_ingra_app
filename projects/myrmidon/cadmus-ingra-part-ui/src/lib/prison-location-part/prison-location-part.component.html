@@ -9,12 +9,12 @@
     <mat-card-content>
       <div>
         <!-- prisonId -->
-        <ingra-lookup-pin
+        <cadmus-lookup-pin
           lookupKey="prison"
           label="prison"
-          [initialName]="orPrisonId"
+          [initialValue]="orPrisonId"
           (entryChange)="onPrisonEntryChange($event)"
-        ></ingra-lookup-pin>
+        ></cadmus-lookup-pin>
         <!-- <mat-form-field>
           <input matInput [formControl]="prisonId" placeholder="prison ID" />
           <mat-error
