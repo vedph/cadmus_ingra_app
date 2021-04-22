@@ -1,6 +1,6 @@
 #banner {
   height: 258px;
-  background-image: url("/assets/img/banner.png");
+  background-image: url("/assets/img/banner.jpg");
   background-size: cover;
   margin-bottom: 16px;
 }
@@ -12,7 +12,7 @@
   font-size: 100px;
   font-weight: normal;
   letter-spacing: -5px;
-  color: #ac7666;
+  color: #7E310B;
 }
 article {
   column-width: 600px;
