@@ -7,8 +7,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 Quick Docker image build:
 
 1. `npm run build-all`
-2. `ng build --prod`
-3. `docker build . -t vedph2020/cadmus-ingra-app:1.0.3 -t vedph2020/cadmus-ingra-app:latest` (replace with the current version).
+2. `ng build --configuration production`
+3. `docker build . -t vedph2020/cadmus-ingra-app:1.0.4 -t vedph2020/cadmus-ingra-app:latest` (replace with the current version).
 
 ## Development server
 

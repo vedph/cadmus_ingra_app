@@ -90,9 +90,10 @@
           <div>
             <!-- name -->
             <itinera-person-name
-              [model$]="personName$"
+              [name]="personName"
               [langEntries]="pnLangEntries || []"
               [typeEntries]="pnTypeEntries || []"
+              (nameChange)="onPersonNameChange($event)"
             >
             </itinera-person-name>
           </div>

@@ -133,13 +133,13 @@ export class DrawingInfoPartComponent
         subjects: [],
       };
     }
-    part.subjects = this.subjects.value;
-    part.description = this.description.value;
-    part.color = this.color.value;
-    part.date = this.date.value;
-    part.links = this.getLinks();
+    part!.subjects = this.subjects.value;
+    part!.description = this.description.value;
+    part!.color = this.color.value;
+    part!.date = this.date.value;
+    part!.links = this.getLinks();
 
-    return part;
+    return part as DrawingInfoPart;
   }
 
   private getLinkGroup(link?: TaggedId): FormGroup {

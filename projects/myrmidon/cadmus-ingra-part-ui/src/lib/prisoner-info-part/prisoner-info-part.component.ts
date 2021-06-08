@@ -29,7 +29,8 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class PrisonerInfoPartComponent
   extends ModelEditorComponentBase<PrisonerInfoPart>
-  implements OnInit {
+  implements OnInit
+{
   public prisonerId: FormControl;
   public prisonId: FormControl;
   public sex: FormControl;
@@ -44,7 +45,7 @@ export class PrisonerInfoPartComponent
   public detEnd: FormControl;
 
   public orPrisonId: string | undefined;
-  public personName$: BehaviorSubject<PersonName>;
+  public personName: PersonName;
 
   // person-name-languages
   public pnLangEntries: ThesaurusEntry[] | undefined;
@@ -59,10 +60,10 @@ export class PrisonerInfoPartComponent
 
   constructor(authService: AuthService, formBuilder: FormBuilder) {
     super(authService);
-    this.personName$ = new BehaviorSubject<PersonName>({
+    this.personName = {
       language: 'ita',
       parts: [],
-    });
+    };
     // form
     this.prisonerId = formBuilder.control(null, [
       Validators.required,
@@ -96,9 +97,6 @@ export class PrisonerInfoPartComponent
 
   public ngOnInit(): void {
     this.initEditor();
-    this.personName$.subscribe((n) => {
-      this.name.setValue(n);
-    });
   }
 
   private updateForm(model: PrisonerInfoPart): void {
@@ -122,6 +120,10 @@ export class PrisonerInfoPartComponent
     this.detStart.setValue(model.detentionStart);
     this.detEnd.setValue(model.detentionEnd);
     this.form.markAsPristine();
+  }
+
+  public onPersonNameChange(name: PersonName): void {
+    this.name.setValue(name);
   }
 
   protected onModelSet(model: PrisonerInfoPart): void {
