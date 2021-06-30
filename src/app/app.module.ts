@@ -88,6 +88,14 @@ import { INDEX_LOOKUP_DEFINITIONS } from './index-lookup-definitions';
           canActivate: [AuthGuardService],
         },
         {
+          path: 'items/:iid/biblio',
+          loadChildren: () =>
+            import('@myrmidon/cadmus-part-biblio-pg').then(
+              (module) => module.CadmusPartBiblioPgModule
+            ),
+          canActivate: [AuthGuardService],
+        },
+        {
           path: 'items/:iid/ingra',
           loadChildren: () =>
             import('@myrmidon/cadmus-ingra-part-pg').then(

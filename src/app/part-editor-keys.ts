@@ -5,7 +5,6 @@ import {
   TOKEN_TEXT_PART_TYPEID,
   COMMENT_PART_TYPEID,
   COMMENT_FRAGMENT_TYPEID,
-  BIBLIOGRAPHY_PART_TYPEID,
 } from '@myrmidon/cadmus-part-general-ui';
 import { APPARATUS_FRAGMENT_TYPEID } from '@myrmidon/cadmus-part-philology-ui';
 import { PartEditorKeys } from '@myrmidon/cadmus-core';
@@ -16,9 +15,11 @@ import {
   PRISON_INFO_PART_TYPEID,
   PRISON_LOCATION_PART_TYPEID,
 } from '@myrmidon/cadmus-ingra-part-ui';
+import { EXT_BIBLIOGRAPHY_PART_TYPEID } from '@myrmidon/cadmus-part-biblio-ui';
 
 const GENERAL = 'general';
 const PHILOLOGY = 'philology';
+const BIBLIO = 'biblio';
 const INGRA = 'ingra';
 const TOKEN_TEXT_LAYER_PART_TYPEID = 'it.vedph.token-text-layer';
 
@@ -29,8 +30,8 @@ const TOKEN_TEXT_LAYER_PART_TYPEID = 'it.vedph.token-text-layer';
  * with the mappings between fragment type IDs and their editor keys.
  */
 export const PART_EDITOR_KEYS: PartEditorKeys = {
-  [BIBLIOGRAPHY_PART_TYPEID]: {
-    part: GENERAL,
+  [EXT_BIBLIOGRAPHY_PART_TYPEID]: {
+    part: BIBLIO,
   },
   [CATEGORIES_PART_TYPEID]: {
     part: GENERAL,
