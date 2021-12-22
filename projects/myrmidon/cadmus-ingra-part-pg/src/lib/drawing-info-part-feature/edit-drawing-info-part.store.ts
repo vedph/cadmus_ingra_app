@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StoreConfig, Store } from '@datorama/akita';
 
-import {
-  EditPartState,
-  EditPartStoreApi,
-  editPartInitialState,
-} from '@myrmidon/cadmus-state';
+import { EditPartState, EditPartStoreApi } from '@myrmidon/cadmus-state';
 
 import { DRAWING_INFO_PART_TYPEID } from '@myrmidon/cadmus-ingra-part-ui';
 
@@ -13,9 +9,10 @@ import { DRAWING_INFO_PART_TYPEID } from '@myrmidon/cadmus-ingra-part-ui';
 @StoreConfig({ name: DRAWING_INFO_PART_TYPEID })
 export class EditDrawingInfoPartStore
   extends Store<EditPartState>
-  implements EditPartStoreApi {
+  implements EditPartStoreApi
+{
   constructor() {
-    super(editPartInitialState);
+    super({});
   }
 
   public setDirty(value: boolean): void {

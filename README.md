@@ -12,4 +12,6 @@ Quick Docker image build:
 
 ## History
 
+- 2021-12-22: upgraded to new shell.
+
 - 2021-10-17: updated `DocReferencesPart` using new model from bricks, which is a breaking change for this part in the database, see <https://github.com/vedph/cadmus_ingra>.

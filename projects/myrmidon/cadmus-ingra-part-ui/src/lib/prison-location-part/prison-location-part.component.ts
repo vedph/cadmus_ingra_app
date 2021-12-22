@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, Validators } from '@angular/forms';
 
 import { ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
-import { AuthService } from '@myrmidon/cadmus-api';
-import { DataPinInfo, deepCopy } from '@myrmidon/cadmus-core';
+import { DataPinInfo } from '@myrmidon/cadmus-core';
 
 import {
   PrisonLocationPart,
   PRISON_LOCATION_PART_TYPEID,
 } from '../prison-location-part';
+import { AuthJwtService } from '@myrmidon/auth-jwt-login';
+import { deepCopy } from '@myrmidon/ng-tools';
 
 /**
  * PrisonLocation editor component.
@@ -21,14 +22,15 @@ import {
 })
 export class PrisonLocationPartComponent
   extends ModelEditorComponentBase<PrisonLocationPart>
-  implements OnInit {
+  implements OnInit
+{
   public prisonId: FormControl;
   public cell: FormControl;
   public location: FormControl;
 
   public orPrisonId: string | undefined;
 
-  constructor(authService: AuthService, formBuilder: FormBuilder) {
+  constructor(authService: AuthJwtService, formBuilder: FormBuilder) {
     super(authService);
     // form
     this.prisonId = formBuilder.control(null, Validators.required);
@@ -54,7 +56,7 @@ export class PrisonLocationPartComponent
 
   private updateForm(model: PrisonLocationPart): void {
     if (!model) {
-      this.form.reset();
+      this.form?.reset();
       return;
     }
     // setting the original prison ID will cause
@@ -64,7 +66,7 @@ export class PrisonLocationPartComponent
     // this.prisonId.setValue(model.prisonId);
     this.cell.setValue(model.cell);
     this.location.setValue(model.location);
-    this.form.markAsPristine();
+    this.form?.markAsPristine();
   }
 
   protected onModelSet(model: PrisonLocationPart): void {
@@ -75,7 +77,7 @@ export class PrisonLocationPartComponent
     let part = this.model;
     if (!part) {
       part = {
-        itemId: this.itemId,
+        itemId: this.itemId || '',
         id: '',
         typeId: PRISON_LOCATION_PART_TYPEID,
         roleId: this.roleId,
@@ -96,6 +98,6 @@ export class PrisonLocationPartComponent
 
   public onPrisonEntryChange(entry: DataPinInfo | null): void {
     this.prisonId.setValue(entry);
-    this.form.markAsDirty();
+    this.form?.markAsDirty();
   }
 }

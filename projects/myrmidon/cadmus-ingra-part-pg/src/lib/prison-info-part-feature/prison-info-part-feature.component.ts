@@ -40,6 +40,6 @@ export class PrisonInfoPartFeatureComponent
   }
 
   public ngOnInit(): void {
-    this.initEditor(null);
+    this.initEditor();
   }
 }

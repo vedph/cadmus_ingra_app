@@ -5,7 +5,6 @@ import { GRAFFITI_INFO_PART_TYPEID } from '@myrmidon/cadmus-ingra-part-ui';
 import {
   EditPartState,
   EditPartStoreApi,
-  editPartInitialState,
 } from '@myrmidon/cadmus-state';
 
 @Injectable({ providedIn: 'root' })
@@ -14,7 +13,7 @@ export class EditGraffitiInfoPartStore
   extends Store<EditPartState>
   implements EditPartStoreApi {
   constructor() {
-    super(editPartInitialState);
+    super({});
   }
 
   public setDirty(value: boolean): void {

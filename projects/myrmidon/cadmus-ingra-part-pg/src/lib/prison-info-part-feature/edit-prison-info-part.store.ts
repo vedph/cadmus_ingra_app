@@ -4,7 +4,6 @@ import { StoreConfig, Store } from '@datorama/akita';
 import {
   EditPartState,
   EditPartStoreApi,
-  editPartInitialState,
 } from '@myrmidon/cadmus-state';
 
 import { PRISON_INFO_PART_TYPEID } from '@myrmidon/cadmus-ingra-part-ui';
@@ -15,7 +14,7 @@ export class EditPrisonInfoPartStore
   extends Store<EditPartState>
   implements EditPartStoreApi {
   constructor() {
-    super(editPartInitialState);
+    super({});
   }
 
   public setDirty(value: boolean): void {

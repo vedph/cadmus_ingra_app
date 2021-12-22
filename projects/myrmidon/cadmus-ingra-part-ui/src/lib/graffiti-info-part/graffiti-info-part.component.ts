@@ -8,18 +8,16 @@ import {
 } from '@angular/forms';
 
 import { ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
-import { AuthService } from '@myrmidon/cadmus-api';
-import {
-  ThesaurusEntry,
-  deepCopy,
-  HistoricalDateModel,
-} from '@myrmidon/cadmus-core';
+import { ThesaurusEntry } from '@myrmidon/cadmus-core';
 
 import {
   GraffitiInfoPart,
   GRAFFITI_INFO_PART_TYPEID,
   RankedId,
 } from '../graffiti-info-part';
+import { AuthJwtService } from '@myrmidon/auth-jwt-login';
+import { deepCopy } from '@myrmidon/ng-tools';
+import { HistoricalDateModel } from '@myrmidon/cadmus-refs-historical-date';
 
 /**
  * GraffitiInfo editor component.
@@ -32,7 +30,8 @@ import {
 })
 export class GraffitiInfoPartComponent
   extends ModelEditorComponentBase<GraffitiInfoPart>
-  implements OnInit {
+  implements OnInit
+{
   public graffitiId: FormControl;
   public language: FormControl;
   public verse: FormControl;
@@ -45,7 +44,7 @@ export class GraffitiInfoPartComponent
   public langEntries: ThesaurusEntry[] | undefined;
   public verseEntries: ThesaurusEntry[] | undefined;
 
-  constructor(authService: AuthService, private _formBuilder: FormBuilder) {
+  constructor(authService: AuthJwtService, private _formBuilder: FormBuilder) {
     super(authService);
     this.graffitiId = _formBuilder.control(null, [
       Validators.required,
@@ -132,7 +131,7 @@ export class GraffitiInfoPartComponent
 
   private updateForm(model: GraffitiInfoPart): void {
     if (!model) {
-      this.form.reset();
+      this.form?.reset();
       return;
     }
     this.graffitiId.setValue(model.graffitiId);
@@ -147,7 +146,7 @@ export class GraffitiInfoPartComponent
       }
     }
     this.date.setValue(model.date);
-    this.form.markAsPristine();
+    this.form?.markAsPristine();
   }
 
   protected onModelSet(model: GraffitiInfoPart): void {
@@ -174,7 +173,7 @@ export class GraffitiInfoPartComponent
     let part = this.model;
     if (!part) {
       part = {
-        itemId: this.itemId,
+        itemId: this.itemId || '',
         id: '',
         typeId: GRAFFITI_INFO_PART_TYPEID,
         roleId: this.roleId,
@@ -183,7 +182,7 @@ export class GraffitiInfoPartComponent
         timeModified: new Date(),
         userId: '',
         graffitiId: '',
-        language: ''
+        language: '',
       };
     }
     part.graffitiId = this.graffitiId.value?.trim();

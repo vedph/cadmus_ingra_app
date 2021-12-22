@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, Validators } from '@angular/forms';
+import { AuthJwtService } from '@myrmidon/auth-jwt-login';
 
 import { ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
-import { AuthService } from '@myrmidon/cadmus-api';
-import { deepCopy } from '@myrmidon/cadmus-core';
+import { deepCopy } from '@myrmidon/ng-tools';
 
 import { PrisonInfoPart, PRISON_INFO_PART_TYPEID } from '../prison-info-part';
 
@@ -18,11 +18,12 @@ import { PrisonInfoPart, PRISON_INFO_PART_TYPEID } from '../prison-info-part';
 })
 export class PrisonInfoPartComponent
   extends ModelEditorComponentBase<PrisonInfoPart>
-  implements OnInit {
+  implements OnInit
+{
   public prisonId: FormControl;
   public place: FormControl;
 
-  constructor(authService: AuthService, formBuilder: FormBuilder) {
+  constructor(authService: AuthJwtService, formBuilder: FormBuilder) {
     super(authService);
     // form
     this.prisonId = formBuilder.control(null, [
@@ -36,7 +37,7 @@ export class PrisonInfoPartComponent
     ]);
     this.form = formBuilder.group({
       prisonId: this.prisonId,
-      place: this.place
+      place: this.place,
     });
   }
 
@@ -46,12 +47,12 @@ export class PrisonInfoPartComponent
 
   private updateForm(model: PrisonInfoPart): void {
     if (!model) {
-      this.form.reset();
+      this.form?.reset();
       return;
     }
     this.prisonId.setValue(model.prisonId);
     this.place.setValue(model.place);
-    this.form.markAsPristine();
+    this.form?.markAsPristine();
   }
 
   protected onModelSet(model: PrisonInfoPart): void {
@@ -62,7 +63,7 @@ export class PrisonInfoPartComponent
     let part = this.model;
     if (!part) {
       part = {
-        itemId: this.itemId,
+        itemId: this.itemId || '',
         id: '',
         typeId: PRISON_INFO_PART_TYPEID,
         roleId: this.roleId,

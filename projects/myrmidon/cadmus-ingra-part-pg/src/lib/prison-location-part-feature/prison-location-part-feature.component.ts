@@ -39,6 +39,6 @@ export class PrisonLocationPartFeatureComponent
   }
 
   public ngOnInit(): void {
-    this.initEditor(null);
+    this.initEditor();
   }
 }

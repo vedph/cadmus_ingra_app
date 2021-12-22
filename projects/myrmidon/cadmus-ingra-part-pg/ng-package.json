@@ -2,16 +2,6 @@
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../dist/myrmidon/cadmus-ingra-part-pg",
   "lib": {
-    "entryFile": "src/public-api.ts",
-    "umdModuleIds": {
-      "@myrmidon/cadmus-core": "@myrmidon/cadmus-core",
-      "@myrmidon/cadmus-state": "@myrmidon/cadmus-state",
-      "@myrmidon/cadmus-ui-pg": "@myrmidon/cadmus-ui-pg",
-      "@datorama/akita": "@datorama/akita",
-      "@myrmidon/cadmus-api": "@myrmidon/cadmus-api",
-      "@myrmidon/cadmus-material": "@myrmidon/cadmus-material",
-      "@myrmidon/cadmus-ui": "@myrmidon/cadmus-ui",
-      "@myrmidon/cadmus-ingra-part-ui": "@myrmidon/cadmus-ingra-part-ui"
-    }
+    "entryFile": "src/public-api.ts"
   }
 }

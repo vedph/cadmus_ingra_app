@@ -1,4 +1,4 @@
-<form [formGroup]="form" (submit)="save()">
+<form [formGroup]="form!" (submit)="save()">
   <mat-card>
     <mat-card-header>
       <div mat-card-avatar>
@@ -57,45 +57,17 @@
               [initialValue]="orPrisonId"
               (entryChange)="onPrisonEntryChange($event)"
             ></cadmus-lookup-pin>
-            <!-- <mat-form-field>
-              <input
-                matInput
-                [formControl]="prisonId"
-                placeholder="prison ID"
-              />
-              <mat-error
-                *ngIf="
-                  prisonId.errors?.required &&
-                  (prisonId.dirty || prisonId.touched)
-                "
-                >ID required</mat-error
-              >
-              <mat-error
-                *ngIf="
-                  prisonId.errors?.maxLength &&
-                  (prisonId.dirty || prisonId.touched)
-                "
-                >ID too long</mat-error
-              >
-              <mat-error
-                *ngIf="
-                  prisonId.errors?.pattern &&
-                  (prisonId.dirty || prisonId.touched)
-                "
-                >invalid ID</mat-error
-              >
-            </mat-form-field> -->
           </div>
           <h4>name</h4>
           <div>
             <!-- name -->
-            <itinera-person-name
+            <cadmus-refs-proper-name
               [name]="personName"
               [langEntries]="pnLangEntries || []"
               [typeEntries]="pnTypeEntries || []"
               (nameChange)="onPersonNameChange($event)"
             >
-            </itinera-person-name>
+            </cadmus-refs-proper-name>
           </div>
           <div>
             <!-- origin -->
@@ -111,19 +83,19 @@
           </div>
           <div>
             <!-- birth -->
-            <cadmus-historical-date-editor
+            <cadmus-refs-historical-date
               label="birth"
               [date]="birth?.value"
               (dateChange)="onBirthDateChange($event)"
-            ></cadmus-historical-date-editor>
+            ></cadmus-refs-historical-date>
           </div>
           <div>
             <!-- death -->
-            <cadmus-historical-date-editor
+            <cadmus-refs-historical-date
               label="death"
               [date]="death?.value"
               (dateChange)="onDeathDateChange($event)"
-            ></cadmus-historical-date-editor>
+            ></cadmus-refs-historical-date>
           </div>
         </mat-tab>
         <mat-tab label="trial">
@@ -179,19 +151,19 @@
           <h3>detention period</h3>
           <div>
             <!-- detStart -->
-            <cadmus-historical-date-editor
+            <cadmus-refs-historical-date
               label="det.start"
               [date]="detStart?.value"
               (dateChange)="onDetStartDateChange($event)"
-            ></cadmus-historical-date-editor>
+            ></cadmus-refs-historical-date>
           </div>
           <div>
             <!-- detEnd -->
-            <cadmus-historical-date-editor
+            <cadmus-refs-historical-date
               label="det.end"
               [date]="detEnd?.value"
               (dateChange)="onDetEndDateChange($event)"
-            ></cadmus-historical-date-editor>
+            ></cadmus-refs-historical-date>
           </div>
         </mat-tab>
       </mat-tab-group>

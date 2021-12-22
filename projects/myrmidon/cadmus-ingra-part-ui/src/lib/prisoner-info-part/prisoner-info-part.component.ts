@@ -2,20 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, Validators } from '@angular/forms';
 
 import { ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
-import { AuthService } from '@myrmidon/cadmus-api';
-import {
-  ThesaurusEntry,
-  deepCopy,
-  HistoricalDateModel,
-  DataPinInfo,
-} from '@myrmidon/cadmus-core';
+import { ThesaurusEntry, DataPinInfo } from '@myrmidon/cadmus-core';
 
 import {
   PrisonerInfoPart,
   PRISONER_INFO_PART_TYPEID,
 } from '../prisoner-info-part';
-import { PersonName } from '@myrmidon/cadmus-itinera-core';
-import { BehaviorSubject } from 'rxjs';
+import { AuthJwtService } from '@myrmidon/auth-jwt-login';
+import { deepCopy } from '@myrmidon/ng-tools';
+import { HistoricalDateModel } from '@myrmidon/cadmus-refs-historical-date';
+import { ProperName } from '@myrmidon/cadmus-refs-proper-name';
 
 /**
  * PrisonerInfo editor component.
@@ -45,7 +41,7 @@ export class PrisonerInfoPartComponent
   public detEnd: FormControl;
 
   public orPrisonId: string | undefined;
-  public personName: PersonName;
+  public personName: ProperName;
 
   // person-name-languages
   public pnLangEntries: ThesaurusEntry[] | undefined;
@@ -58,11 +54,11 @@ export class PrisonerInfoPartComponent
   // trial-judgements
   public trJudgementEntries: ThesaurusEntry[] | undefined;
 
-  constructor(authService: AuthService, formBuilder: FormBuilder) {
+  constructor(authService: AuthJwtService, formBuilder: FormBuilder) {
     super(authService);
     this.personName = {
       language: 'ita',
-      parts: [],
+      pieces: [],
     };
     // form
     this.prisonerId = formBuilder.control(null, [
@@ -101,7 +97,7 @@ export class PrisonerInfoPartComponent
 
   private updateForm(model: PrisonerInfoPart): void {
     if (!model) {
-      this.form.reset();
+      this.form?.reset();
       return;
     }
     this.prisonerId.setValue(model.prisonerId);
@@ -119,10 +115,10 @@ export class PrisonerInfoPartComponent
     this.judgement.setValue(model.judgement);
     this.detStart.setValue(model.detentionStart);
     this.detEnd.setValue(model.detentionEnd);
-    this.form.markAsPristine();
+    this.form?.markAsPristine();
   }
 
-  public onPersonNameChange(name: PersonName): void {
+  public onPersonNameChange(name: ProperName): void {
     this.name.setValue(name);
   }
 
@@ -171,7 +167,7 @@ export class PrisonerInfoPartComponent
     let part = this.model;
     if (!part) {
       part = {
-        itemId: this.itemId,
+        itemId: this.itemId || '',
         id: '',
         typeId: PRISONER_INFO_PART_TYPEID,
         roleId: this.roleId,
@@ -199,7 +195,7 @@ export class PrisonerInfoPartComponent
 
   public onPrisonEntryChange(entry: DataPinInfo | null): void {
     this.prisonId.setValue(entry);
-    this.form.markAsDirty();
+    this.form?.markAsDirty();
   }
 
   public onBirthDateChange(date: HistoricalDateModel): void {

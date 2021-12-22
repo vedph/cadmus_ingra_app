@@ -1,41 +1,39 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import {
-  User,
-  GravatarService,
-  Thesaurus,
-  ThesaurusEntry,
-} from '@myrmidon/cadmus-core';
-import { AuthService } from '@myrmidon/cadmus-api';
+import { Thesaurus, ThesaurusEntry } from '@myrmidon/cadmus-core';
 import { AppService, AppQuery } from '@myrmidon/cadmus-state';
+import { Router } from '@angular/router';
+import { take } from 'rxjs/operators';
+import {
+  AuthJwtService,
+  GravatarService,
+  User,
+} from '@myrmidon/auth-jwt-login';
 
 @Component({
-  selector: 'ingra-root',
+  selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   public user?: User;
   public logged?: boolean;
-  public itemBrowsers?: ThesaurusEntry[] | null;
+  public itemBrowsers?: ThesaurusEntry[];
 
   constructor(
-    private _authService: AuthService,
+    private _authService: AuthJwtService,
     private _gravatarService: GravatarService,
     private _appService: AppService,
-    private _appQuery: AppQuery
-  ) {
-    this.user = undefined;
-    this.logged = false;
-    this.itemBrowsers = [];
-  }
+    private _appQuery: AppQuery,
+    private _router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.user = this._authService.currentUserValue;
+    this.user = this._authService.currentUserValue || undefined;
     this.logged = this.user !== null;
 
-    this._authService.currentUser$.subscribe((user: User) => {
+    this._authService.currentUser$.subscribe((user: User | null) => {
       this.logged = this._authService.isAuthenticated(true);
-      this.user = user;
+      this.user = user || undefined;
       // load the general app state just once
       if (user) {
         this._appService.load();
@@ -44,15 +42,12 @@ export class AppComponent {
 
     this._appQuery
       .selectItemBrowserThesaurus()
-      .subscribe((thesaurus: Thesaurus) => {
-        this.itemBrowsers = thesaurus ? thesaurus.entries : null;
+      .subscribe((thesaurus: Thesaurus | undefined) => {
+        this.itemBrowsers = thesaurus ? thesaurus.entries : undefined;
       });
   }
 
-  public getGravatarUrl(email?: string, size = 80): string {
-    if (!email) {
-      return '';
-    }
+  public getGravatarUrl(email: string, size = 80): string | null {
     return this._gravatarService.buildGravatarUrl(email, size);
   }
 
@@ -60,6 +55,11 @@ export class AppComponent {
     if (!this.logged) {
       return;
     }
-    this._authService.logout();
+    this._authService
+      .logout()
+      .pipe(take(1))
+      .subscribe((_) => {
+        this._router.navigate(['/home']);
+      });
   }
 }

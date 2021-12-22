@@ -2,9 +2,9 @@
 <ingra-drawing-info-part
   [itemId]="itemId"
   [roleId]="roleId"
-  [model]="part$ | async"
+  [model]="$any(part$ | async)"
   (modelChange)="save($event)"
-  [thesauri]="thesauri$ | async"
+  [thesauri]="$any(thesauri$ | async)"
   (editorClose)="close()"
   (dirtyChange)="onDirtyChange($event)"
 ></ingra-drawing-info-part>

@@ -1,5 +1,6 @@
-import { HistoricalDateModel, Part } from '@myrmidon/cadmus-core';
-import { PersonName } from '@myrmidon/cadmus-itinera-core';
+import { Part } from '@myrmidon/cadmus-core';
+import { HistoricalDateModel } from '@myrmidon/cadmus-refs-historical-date';
+import { ProperName } from '@myrmidon/cadmus-refs-proper-name';
 
 /**
  * The PrisonerInfo part model.
@@ -8,7 +9,7 @@ export interface PrisonerInfoPart extends Part {
   prisonerId: string;
   prisonId: string;
   sex?: string;
-  name?: PersonName;
+  name?: ProperName;
   birthDate?: HistoricalDateModel;
   deathDate?: HistoricalDateModel;
   origin?: string;

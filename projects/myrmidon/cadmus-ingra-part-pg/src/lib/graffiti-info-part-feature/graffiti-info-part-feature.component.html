@@ -2,9 +2,9 @@
 <ingra-graffiti-info-part
   [itemId]="itemId"
   [roleId]="roleId"
-  [model]="part$ | async"
+  [model]="$any(part$ | async)"
   (modelChange)="save($event)"
-  [thesauri]="thesauri$ | async"
+  [thesauri]="(thesauri$ | async) || undefined"
   (editorClose)="close()"
   (dirtyChange)="onDirtyChange($event)"
 ></ingra-graffiti-info-part>

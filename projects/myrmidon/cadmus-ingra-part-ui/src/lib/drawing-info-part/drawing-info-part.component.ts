@@ -8,14 +8,16 @@ import {
 } from '@angular/forms';
 
 import { ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
-import { AuthService } from '@myrmidon/cadmus-api';
-import { ThesaurusEntry, deepCopy, HistoricalDateModel } from '@myrmidon/cadmus-core';
+import { ThesaurusEntry } from '@myrmidon/cadmus-core';
 
 import {
   DrawingInfoPart,
   DRAWING_INFO_PART_TYPEID,
   TaggedId,
 } from '../drawing-info-part';
+import { AuthJwtService } from '@myrmidon/auth-jwt-login';
+import { deepCopy } from '@myrmidon/ng-tools';
+import { HistoricalDateModel } from '@myrmidon/cadmus-refs-historical-date';
 
 /**
  * DrawingInfo editor component.
@@ -29,7 +31,8 @@ import {
 })
 export class DrawingInfoPartComponent
   extends ModelEditorComponentBase<DrawingInfoPart>
-  implements OnInit {
+  implements OnInit
+{
   public subjects: FormControl;
   public description: FormControl;
   public color: FormControl;
@@ -51,7 +54,7 @@ export class DrawingInfoPartComponent
     automaticLayout: true,
   };
 
-  constructor(authService: AuthService, private _formBuilder: FormBuilder) {
+  constructor(authService: AuthJwtService, private _formBuilder: FormBuilder) {
     super(authService);
     // form
     this.subjects = _formBuilder.control([], Validators.required);
@@ -74,7 +77,7 @@ export class DrawingInfoPartComponent
 
   private updateForm(model: DrawingInfoPart): void {
     if (!model) {
-      this.form.reset();
+      this.form?.reset();
       return;
     }
     this.subjects.setValue(model.subjects || []);
@@ -87,7 +90,7 @@ export class DrawingInfoPartComponent
         this.links.controls.push(this.getLinkGroup(l));
       }
     }
-    this.form.markAsPristine();
+    this.form?.markAsPristine();
   }
 
   protected onModelSet(model: DrawingInfoPart): void {
@@ -121,7 +124,7 @@ export class DrawingInfoPartComponent
     let part = this.model;
     if (!part) {
       part = {
-        itemId: this.itemId,
+        itemId: this.itemId || '',
         id: '',
         typeId: DRAWING_INFO_PART_TYPEID,
         roleId: this.roleId,
