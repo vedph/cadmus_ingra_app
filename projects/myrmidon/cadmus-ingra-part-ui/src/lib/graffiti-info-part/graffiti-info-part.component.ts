@@ -32,19 +32,22 @@ export class GraffitiInfoPartComponent
   extends ModelEditorComponentBase<GraffitiInfoPart>
   implements OnInit
 {
-  public graffitiId: FormControl;
-  public language: FormControl;
-  public verse: FormControl;
-  public rhyme: FormControl;
-  public date: FormControl;
-  public author: FormControl;
+  public graffitiId: FormControl<string | null>;
+  public language: FormControl<string | null>;
+  public verse: FormControl<string | null>;
+  public rhyme: FormControl<string | null>;
+  public date: FormControl<HistoricalDateModel | null>;
+  public author: FormControl<string | null>;
   public idents: FormArray;
 
   // languages
   public langEntries: ThesaurusEntry[] | undefined;
   public verseEntries: ThesaurusEntry[] | undefined;
 
-  constructor(authService: AuthJwtService, private _formBuilder: FormBuilder) {
+  constructor(
+    authService: AuthJwtService,
+    private _formBuilder: FormBuilder
+  ) {
     super(authService);
     this.graffitiId = _formBuilder.control(null, [
       Validators.required,
@@ -136,16 +139,16 @@ export class GraffitiInfoPartComponent
     }
     this.graffitiId.setValue(model.graffitiId);
     this.language.setValue(model.language);
-    this.verse.setValue(model.verse);
-    this.rhyme.setValue(model.rhyme);
-    this.author.setValue(model.author);
+    this.verse.setValue(model.verse || null);
+    this.rhyme.setValue(model.rhyme || null);
+    this.author.setValue(model.author || null);
     this.idents.clear();
     if (model.identifications) {
       for (let i of model.identifications) {
         this.idents.controls.push(this.getIdentGroup(i));
       }
     }
-    this.date.setValue(model.date);
+    this.date.setValue(model.date || null);
     this.form?.markAsPristine();
   }
 
@@ -185,13 +188,13 @@ export class GraffitiInfoPartComponent
         language: '',
       };
     }
-    part.graffitiId = this.graffitiId.value?.trim();
-    part.language = this.language.value?.trim();
+    part.graffitiId = this.graffitiId.value?.trim() || '';
+    part.language = this.language.value?.trim() || '';
     part.verse = this.verse.value?.trim();
     part.rhyme = this.rhyme.value?.trim();
     part.author = this.author.value?.trim();
     part.identifications = this.getIdents();
-    part.date = this.date.value;
+    part.date = this.date.value || undefined;
 
     return part;
   }

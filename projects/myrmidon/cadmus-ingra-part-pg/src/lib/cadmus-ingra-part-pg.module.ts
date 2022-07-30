@@ -9,7 +9,7 @@ import {
   PRISON_INFO_PART_TYPEID,
   PRISON_LOCATION_PART_TYPEID,
 } from '@myrmidon/cadmus-ingra-part-ui';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Route } from '@angular/router';
 import { CadmusCoreModule, PendingChangesGuard } from '@myrmidon/cadmus-core';
 import { CadmusStateModule } from '@myrmidon/cadmus-state';
 import { CadmusUiModule } from '@myrmidon/cadmus-ui';

@@ -20,8 +20,8 @@ export class PrisonInfoPartComponent
   extends ModelEditorComponentBase<PrisonInfoPart>
   implements OnInit
 {
-  public prisonId: FormControl;
-  public place: FormControl;
+  public prisonId: FormControl<string | null>;
+  public place: FormControl<string | null>;
 
   constructor(authService: AuthJwtService, formBuilder: FormBuilder) {
     super(authService);
@@ -75,8 +75,8 @@ export class PrisonInfoPartComponent
         place: '',
       };
     }
-    part.prisonId = this.prisonId.value?.trim();
-    part.place = this.place.value?.trim();
+    part.prisonId = this.prisonId.value?.trim() || '';
+    part.place = this.place.value?.trim() || '';
     return part;
   }
 }

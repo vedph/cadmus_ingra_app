@@ -15,27 +15,6 @@
           [initialValue]="orPrisonId"
           (entryChange)="onPrisonEntryChange($event)"
         ></cadmus-lookup-pin>
-        <!-- <mat-form-field>
-          <input matInput [formControl]="prisonId" placeholder="prison ID" />
-          <mat-error
-            *ngIf="
-              prisonId.errors?.required && (prisonId.dirty || prisonId.touched)
-            "
-            >prison ID required</mat-error
-          >
-          <mat-error
-            *ngIf="
-              prisonId.errors?.maxLength && (prisonId.dirty || prisonId.touched)
-            "
-            >prison ID too long</mat-error
-          >
-          <mat-error
-            *ngIf="
-              prisonId.errors?.pattern && (prisonId.dirty || prisonId.touched)
-            "
-            >invalid prison ID</mat-error
-          >
-        </mat-form-field> -->
       </div>
       <div>
         <!-- cell -->

@@ -24,9 +24,9 @@ export class PrisonLocationPartComponent
   extends ModelEditorComponentBase<PrisonLocationPart>
   implements OnInit
 {
-  public prisonId: FormControl;
-  public cell: FormControl;
-  public location: FormControl;
+  public prisonId: FormControl<DataPinInfo | null>;
+  public cell: FormControl<string | null>;
+  public location: FormControl<string | null>;
 
   public orPrisonId: string | undefined;
 
@@ -90,9 +90,9 @@ export class PrisonLocationPartComponent
         location: '',
       };
     }
-    part.prisonId = this.prisonId.value?.value;
-    part.cell = this.cell.value?.trim();
-    part.location = this.location.value?.trim();
+    part.prisonId = this.prisonId.value?.value || '';
+    part.cell = this.cell.value?.trim() || '';
+    part.location = this.location.value?.trim() || '';
     return part;
   }
 

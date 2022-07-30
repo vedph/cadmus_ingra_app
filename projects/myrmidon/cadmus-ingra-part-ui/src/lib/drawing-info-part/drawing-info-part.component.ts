@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 
 import { ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
-import { ThesaurusEntry } from '@myrmidon/cadmus-core';
+import { CadmusValidators, ThesaurusEntry } from '@myrmidon/cadmus-core';
 
 import {
   DrawingInfoPart,
@@ -33,10 +33,10 @@ export class DrawingInfoPartComponent
   extends ModelEditorComponentBase<DrawingInfoPart>
   implements OnInit
 {
-  public subjects: FormControl;
-  public description: FormControl;
-  public color: FormControl;
-  public date: FormControl;
+  public subjects: FormControl<string[]>;
+  public description: FormControl<string | null>;
+  public color: FormControl<string | null>;
+  public date: FormControl<HistoricalDateModel | null>;
   public links: FormArray;
 
   // drawing-subjects
@@ -57,7 +57,10 @@ export class DrawingInfoPartComponent
   constructor(authService: AuthJwtService, private _formBuilder: FormBuilder) {
     super(authService);
     // form
-    this.subjects = _formBuilder.control([], Validators.required);
+    this.subjects = _formBuilder.control([], {
+      validators: CadmusValidators.strictMinLengthValidator(1),
+      nonNullable: true,
+    });
     this.description = _formBuilder.control(null, Validators.maxLength(1000));
     this.color = _formBuilder.control(null, Validators.maxLength(50));
     this.date = _formBuilder.control(null);
@@ -82,8 +85,8 @@ export class DrawingInfoPartComponent
     }
     this.subjects.setValue(model.subjects || []);
     this.description.setValue(model.description);
-    this.color.setValue(model.color);
-    this.date.setValue(model.date);
+    this.color.setValue(model.color || null);
+    this.date.setValue(model.date || null);
     this.links.clear();
     if (model.links) {
       for (let l of model.links) {
@@ -137,9 +140,9 @@ export class DrawingInfoPartComponent
       };
     }
     part!.subjects = this.subjects.value;
-    part!.description = this.description.value;
-    part!.color = this.color.value;
-    part!.date = this.date.value;
+    part!.description = this.description.value || '';
+    part!.color = this.color.value || undefined;
+    part!.date = this.date.value || undefined;
     part!.links = this.getLinks();
 
     return part as DrawingInfoPart;

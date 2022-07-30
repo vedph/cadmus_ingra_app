@@ -120,7 +120,7 @@
           <div>
             <!-- date -->
             <cadmus-refs-historical-date
-              [date]="date?.value"
+              [date]="date?.value || undefined"
               (dateChange)="onDateChange($event)"
             ></cadmus-refs-historical-date>
           </div>

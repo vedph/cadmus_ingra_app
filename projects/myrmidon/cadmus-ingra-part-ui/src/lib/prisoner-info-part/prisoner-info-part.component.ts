@@ -27,18 +27,18 @@ export class PrisonerInfoPartComponent
   extends ModelEditorComponentBase<PrisonerInfoPart>
   implements OnInit
 {
-  public prisonerId: FormControl;
-  public prisonId: FormControl;
-  public sex: FormControl;
-  public name: FormControl;
-  public origin: FormControl;
-  public birth: FormControl;
-  public death: FormControl;
+  public prisonerId: FormControl<string | null>;
+  public prisonId: FormControl<DataPinInfo | null>;
+  public sex: FormControl<string | null>;
+  public name: FormControl<ProperName | null>;
+  public origin: FormControl<string | null>;
+  public birth: FormControl<HistoricalDateModel | null>;
+  public death: FormControl<HistoricalDateModel | null>;
 
-  public charge: FormControl;
-  public judgement: FormControl;
-  public detStart: FormControl;
-  public detEnd: FormControl;
+  public charge: FormControl<string | null>;
+  public judgement: FormControl<string | null>;
+  public detStart: FormControl<HistoricalDateModel | null>;
+  public detEnd: FormControl<HistoricalDateModel | null>;
 
   public orPrisonId: string | undefined;
   public personName: ProperName;
@@ -106,15 +106,15 @@ export class PrisonerInfoPartComponent
     // corresponding data pin and thus set prisonId back
     this.orPrisonId = model.prisonId;
     // this.prisonId.setValue(model.prisonId);
-    this.sex.setValue(model.sex);
-    this.name.setValue(model.name);
-    this.origin.setValue(model.origin);
-    this.birth.setValue(model.birthDate);
-    this.death.setValue(model.deathDate);
-    this.charge.setValue(model.charge);
-    this.judgement.setValue(model.judgement);
-    this.detStart.setValue(model.detentionStart);
-    this.detEnd.setValue(model.detentionEnd);
+    this.sex.setValue(model.sex || null);
+    this.name.setValue(model.name || null);
+    this.origin.setValue(model.origin || null);
+    this.birth.setValue(model.birthDate || null);
+    this.death.setValue(model.deathDate || null);
+    this.charge.setValue(model.charge || null);
+    this.judgement.setValue(model.judgement || null);
+    this.detStart.setValue(model.detentionStart || null);
+    this.detEnd.setValue(model.detentionEnd || null);
     this.form?.markAsPristine();
   }
 
@@ -179,17 +179,17 @@ export class PrisonerInfoPartComponent
         prisonId: '',
       };
     }
-    part.prisonerId = this.prisonerId.value?.trim();
-    part.prisonId = this.prisonId.value?.value;
-    part.sex = this.sex.value;
-    part.name = this.name.value;
+    part.prisonerId = this.prisonerId.value?.trim() || '';
+    part.prisonId = this.prisonId.value?.value || '';
+    part.sex = this.sex.value || '';
+    part.name = this.name.value!;
     part.origin = this.origin.value?.trim();
-    part.birthDate = this.birth.value;
-    part.deathDate = this.death.value;
+    part.birthDate = this.birth.value || undefined;
+    part.deathDate = this.death.value || undefined;
     part.charge = this.charge.value?.trim();
     part.judgement = this.judgement.value?.trim();
-    part.detentionStart = this.detStart.value;
-    part.detentionEnd = this.detEnd.value;
+    part.detentionStart = this.detStart.value || undefined;
+    part.detentionEnd = this.detEnd.value || undefined;
     return part;
   }
 
