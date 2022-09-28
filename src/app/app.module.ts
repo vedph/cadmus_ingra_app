@@ -43,8 +43,6 @@ import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 // ngx-markdown
 import { MarkdownModule } from 'ngx-markdown';
-// moment
-import { MomentModule } from 'ngx-moment';
 
 // myrmidon
 import { EnvServiceProvider, NgToolsModule } from '@myrmidon/ng-tools';
@@ -56,9 +54,13 @@ import {
 import { AuthJwtAdminModule } from '@myrmidon/auth-jwt-admin';
 
 // cadmus bricks
+import { CadmusRefsAssertionModule } from '@myrmidon/cadmus-refs-assertion';
+import { CadmusRefsDecoratedIdsModule } from '@myrmidon/cadmus-refs-decorated-ids';
 import { CadmusRefsDocReferencesModule } from '@myrmidon/cadmus-refs-doc-references';
 import { CadmusRefsHistoricalDateModule } from '@myrmidon/cadmus-refs-historical-date';
 import { CadmusRefsExternalIdsModule } from '@myrmidon/cadmus-refs-external-ids';
+import { CadmusRefsProperNameModule } from '@myrmidon/cadmus-refs-proper-name';
+import { CadmusUiFlagsPickerModule } from '@myrmidon/cadmus-ui-flags-picker';
 
 // cadmus libs
 import { CadmusApiModule } from '@myrmidon/cadmus-api';
@@ -133,17 +135,19 @@ import { INDEX_LOOKUP_DEFINITIONS } from './index-lookup-definitions';
     MonacoEditorModule.forRoot(),
     // markdown
     MarkdownModule.forRoot(),
-    // moment
-    MomentModule,
     // myrmidon
     NgToolsModule,
     NgMatToolsModule,
     AuthJwtLoginModule,
     AuthJwtAdminModule,
     // cadmus bricks
+    CadmusRefsAssertionModule,
     CadmusRefsDocReferencesModule,
     CadmusRefsHistoricalDateModule,
     CadmusRefsExternalIdsModule,
+    CadmusUiFlagsPickerModule,
+    CadmusRefsProperNameModule,
+    CadmusRefsDecoratedIdsModule,
     // cadmus
     CadmusApiModule,
     CadmusCoreModule,

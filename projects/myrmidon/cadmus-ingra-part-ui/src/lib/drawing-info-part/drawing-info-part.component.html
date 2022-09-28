@@ -11,12 +11,12 @@
         <mat-tab label="general">
           <div>
             <!-- subjects (bound) -->
-            <cadmus-multi-entry-selector
+            <cadmus-ui-flags-picker
               [numbering]="true"
-              [entries]="dsEntries"
-              [selectedIds]="subjects?.value"
-              (selectionChange)="onSubjectSelectionChange($event)"
-            ></cadmus-multi-entry-selector>
+              [flags]="colorFlags"
+              [selectedIds]="subjects.value"
+              (selectedIdsChange)="onSubjectSelectionChange($event)"
+            ></cadmus-ui-flags-picker>
           </div>
           <div>
             <!-- color (bound) -->
@@ -43,7 +43,7 @@
           <div>
             <!-- date -->
             <cadmus-refs-historical-date
-              [date]="date?.value || undefined"
+              [date]="date.value || undefined"
               (dateChange)="onDateChange($event)"
             ></cadmus-refs-historical-date>
           </div>

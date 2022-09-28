@@ -18,6 +18,7 @@ import {
 import { AuthJwtService } from '@myrmidon/auth-jwt-login';
 import { deepCopy } from '@myrmidon/ng-tools';
 import { HistoricalDateModel } from '@myrmidon/cadmus-refs-historical-date';
+import { Flag } from '@myrmidon/cadmus-ui-flags-picker';
 
 /**
  * DrawingInfo editor component.
@@ -46,6 +47,8 @@ export class DrawingInfoPartComponent
   // link-reasons
   public dlEntries: ThesaurusEntry[] | undefined;
 
+  public colorFlags: Flag[];
+
   public editorOptions = {
     theme: 'vs-light',
     language: 'markdown',
@@ -56,6 +59,7 @@ export class DrawingInfoPartComponent
 
   constructor(authService: AuthJwtService, private _formBuilder: FormBuilder) {
     super(authService);
+    this.colorFlags = [];
     // form
     this.subjects = _formBuilder.control([], {
       validators: CadmusValidators.strictMinLengthValidator(1),
@@ -104,8 +108,12 @@ export class DrawingInfoPartComponent
     let key = 'drawing-subjects';
     if (this.thesauri && this.thesauri[key]) {
       this.dsEntries = this.thesauri[key].entries;
+      this.colorFlags = this.dsEntries!.map((e) => {
+        return { id: e.id, label: e.value } as Flag;
+      });
     } else {
       this.dsEntries = undefined;
+      this.colorFlags = [];
     }
 
     key = 'drawing-colors';

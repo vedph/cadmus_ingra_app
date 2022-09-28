@@ -1,6 +1,6 @@
 import { Part } from '@myrmidon/cadmus-core';
 import { HistoricalDateModel } from '@myrmidon/cadmus-refs-historical-date';
-import { ProperName } from '@myrmidon/cadmus-refs-proper-name';
+import { AssertedProperName } from '@myrmidon/cadmus-refs-proper-name';
 
 /**
  * The PrisonerInfo part model.
@@ -9,7 +9,7 @@ export interface PrisonerInfoPart extends Part {
   prisonerId: string;
   prisonId: string;
   sex?: string;
-  name?: ProperName;
+  name?: AssertedProperName;
   birthDate?: HistoricalDateModel;
   deathDate?: HistoricalDateModel;
   origin?: string;
@@ -86,7 +86,7 @@ export const PRISONER_INFO_PART_SCHEMA = {
     },
     name: {
       type: 'object',
-      required: ['language', 'parts'],
+      required: ['language', 'pieces'],
       properties: {
         language: {
           type: 'string',
@@ -94,7 +94,7 @@ export const PRISONER_INFO_PART_SCHEMA = {
         tag: {
           type: 'string',
         },
-        parts: {
+        pieces: {
           type: 'array',
           items: {
             anyOf: [
@@ -111,6 +111,46 @@ export const PRISONER_INFO_PART_SCHEMA = {
                 },
               },
             ],
+          },
+        },
+        assertion: {
+          type: 'object',
+          required: ['rank'],
+          properties: {
+            tag: {
+              type: 'string',
+            },
+            rank: {
+              type: 'integer',
+            },
+            note: {
+              type: 'string',
+            },
+            references: {
+              type: 'array',
+              items: {
+                anyOf: [
+                  {
+                    type: 'object',
+                    required: ['citation'],
+                    properties: {
+                      type: {
+                        type: 'string',
+                      },
+                      tag: {
+                        type: 'string',
+                      },
+                      citation: {
+                        type: 'string',
+                      },
+                      note: {
+                        type: 'string',
+                      },
+                    },
+                  },
+                ],
+              },
+            },
           },
         },
       },

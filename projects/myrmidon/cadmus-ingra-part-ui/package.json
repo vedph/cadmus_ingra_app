@@ -14,11 +14,11 @@
     "name": "Daniele Fusi"
   },
   "peerDependencies": {
-    "@angular/common": "^11.2.7",
-    "@angular/core": "^11.2.7",
-    "@angular/forms": "^11.2.7",
-    "@myrmidon/cadmus-core": "^0.0.1",
-    "@myrmidon/cadmus-material": "^0.0.1"
+    "@angular/common": "^14.0.0",
+    "@angular/core": "^14.0.0",
+    "@angular/forms": "^14.0.0",
+    "@myrmidon/cadmus-core": "^1.0.0",
+    "@myrmidon/cadmus-material": "^0.1.0"
   },
   "dependencies": {
     "tslib": "^2.0.0"

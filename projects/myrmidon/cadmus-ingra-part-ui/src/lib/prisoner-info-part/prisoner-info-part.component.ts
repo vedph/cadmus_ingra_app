@@ -11,7 +11,7 @@ import {
 import { AuthJwtService } from '@myrmidon/auth-jwt-login';
 import { deepCopy } from '@myrmidon/ng-tools';
 import { HistoricalDateModel } from '@myrmidon/cadmus-refs-historical-date';
-import { ProperName } from '@myrmidon/cadmus-refs-proper-name';
+import { AssertedProperName, ProperName } from '@myrmidon/cadmus-refs-proper-name';
 
 /**
  * PrisonerInfo editor component.
@@ -30,7 +30,7 @@ export class PrisonerInfoPartComponent
   public prisonerId: FormControl<string | null>;
   public prisonId: FormControl<DataPinInfo | null>;
   public sex: FormControl<string | null>;
-  public name: FormControl<ProperName | null>;
+  public name: FormControl<AssertedProperName | null>;
   public origin: FormControl<string | null>;
   public birth: FormControl<HistoricalDateModel | null>;
   public death: FormControl<HistoricalDateModel | null>;
@@ -118,8 +118,8 @@ export class PrisonerInfoPartComponent
     this.form?.markAsPristine();
   }
 
-  public onPersonNameChange(name: ProperName): void {
-    this.name.setValue(name);
+  public onPersonNameChange(name: AssertedProperName | undefined): void {
+    this.name.setValue(name || null);
   }
 
   protected onModelSet(model: PrisonerInfoPart): void {

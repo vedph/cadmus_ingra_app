@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Thesaurus, ThesaurusEntry } from '@myrmidon/cadmus-core';
 import { AppService, AppQuery } from '@myrmidon/cadmus-state';
 import { Router } from '@angular/router';
@@ -8,6 +8,7 @@ import {
   GravatarService,
   User,
 } from '@myrmidon/auth-jwt-login';
+import { EnvService } from '@myrmidon/ng-tools';
 
 @Component({
   selector: 'app-root',
@@ -18,14 +19,18 @@ export class AppComponent implements OnInit {
   public user?: User;
   public logged?: boolean;
   public itemBrowsers?: ThesaurusEntry[];
+  public version: string;
 
   constructor(
     private _authService: AuthJwtService,
     private _gravatarService: GravatarService,
     private _appService: AppService,
     private _appQuery: AppQuery,
-    private _router: Router
-  ) {}
+    private _router: Router,
+    env: EnvService
+  ) {
+    this.version = env.get('version') || '';
+  }
 
   ngOnInit(): void {
     this.user = this._authService.currentUserValue || undefined;

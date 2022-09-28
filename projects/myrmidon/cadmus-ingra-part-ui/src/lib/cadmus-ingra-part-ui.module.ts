@@ -26,6 +26,7 @@ import { CadmusRefsProperNameModule } from '@myrmidon/cadmus-refs-proper-name';
 import { CadmusRefsDecoratedIdsModule } from '@myrmidon/cadmus-refs-decorated-ids';
 import { CadmusRefsHistoricalDateModule } from '@myrmidon/cadmus-refs-historical-date';
 import { CadmusRefsDocReferencesModule } from '@myrmidon/cadmus-refs-doc-references';
+import { CadmusUiFlagsPickerModule } from '@myrmidon/cadmus-ui-flags-picker';
 
 import { PrisonInfoPartComponent } from './prison-info-part/prison-info-part.component';
 import { GraffitiInfoPartComponent } from './graffiti-info-part/graffiti-info-part.component';
@@ -63,12 +64,11 @@ import { DrawingInfoPartComponent } from './drawing-info-part/drawing-info-part.
     NgToolsModule,
     CadmusCoreModule,
     CadmusUiModule,
+    CadmusUiFlagsPickerModule,
     CadmusRefsHistoricalDateModule,
     CadmusRefsDocReferencesModule,
     CadmusRefsProperNameModule,
     CadmusRefsDecoratedIdsModule,
-    // CadmusItineraCoreModule,
-    // CadmusItineraUiModule
   ],
   exports: [
     DrawingInfoPartComponent,

@@ -7,11 +7,16 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 Quick Docker image build:
 
 1. `npm run build-lib`
-2. `ng build --configuration production`
-3. `docker build . -t vedph2020/cadmus-ingra-app:1.1.0 -t vedph2020/cadmus-ingra-app:latest` (replace with the current version).
+2. update version in `env.js` and `ng build --configuration production`
+3. `docker build . -t vedph2020/cadmus-ingra-app:1.2.0 -t vedph2020/cadmus-ingra-app:latest` (replace with the current version).
 
 ## History
 
+### 1.2.0
+
+- 2022-09-28:
+  - replaced ProperName with AssertedProperName in prisoner info.
+  - updated Angular and Cadmus packages.
 - 2022-07-30: upgraded to Angular 14, refactoring untyped forms.
 
 ### 1.1.0
