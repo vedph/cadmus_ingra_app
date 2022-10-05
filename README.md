@@ -31,6 +31,10 @@ Production version:
 
 ## History
 
+- 2022-05-10:
+  - updated packages.
+  - added preview.
+
 ### 1.2.0
 
 - 2022-09-28:
