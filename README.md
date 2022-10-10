@@ -31,6 +31,7 @@ Production version:
 
 ## History
 
+- 2022-10-10: more preview styles.
 - 2022-05-10:
   - updated packages.
   - added preview.
