@@ -1,5 +1,5 @@
-<form [formGroup]="form!" (submit)="save()">
-  <mat-card>
+<form [formGroup]="form" (submit)="save()">
+  <mat-card appearance="outlined">
     <mat-card-header>
       <div mat-card-avatar>
         <mat-icon>picture_in_picture</mat-icon>
@@ -10,7 +10,8 @@
       <div>
         <!-- prisonId -->
         <mat-form-field>
-          <input matInput [formControl]="prisonId" placeholder="ID" />
+          <mat-label>ID</mat-label>
+          <input matInput [formControl]="prisonId" />
           <mat-error
             *ngIf="
               prisonId.errors?.required && (prisonId.dirty || prisonId.touched)
@@ -34,7 +35,8 @@
       <div>
         <!-- place -->
         <mat-form-field>
-          <input matInput [formControl]="place" placeholder="place" />
+          <mat-label>place</mat-label>
+          <input matInput [formControl]="place" />
           <mat-error
             *ngIf="place.errors?.required && (place.dirty || place.touched)"
             >place required</mat-error

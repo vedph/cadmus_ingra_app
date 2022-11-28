@@ -1,17 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormBuilder,
+  Validators,
+  FormGroup,
+  UntypedFormGroup,
+} from '@angular/forms';
 
-import { ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
-import { ThesaurusEntry, DataPinInfo } from '@myrmidon/cadmus-core';
+import { EditedObject, ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
+import {
+  ThesaurusEntry,
+  DataPinInfo,
+  ThesauriSet,
+} from '@myrmidon/cadmus-core';
+import { AuthJwtService } from '@myrmidon/auth-jwt-login';
+import { HistoricalDateModel } from '@myrmidon/cadmus-refs-historical-date';
+import {
+  AssertedProperName,
+  ProperName,
+} from '@myrmidon/cadmus-refs-proper-name';
 
 import {
   PrisonerInfoPart,
   PRISONER_INFO_PART_TYPEID,
 } from '../prisoner-info-part';
-import { AuthJwtService } from '@myrmidon/auth-jwt-login';
-import { deepCopy } from '@myrmidon/ng-tools';
-import { HistoricalDateModel } from '@myrmidon/cadmus-refs-historical-date';
-import { AssertedProperName, ProperName } from '@myrmidon/cadmus-refs-proper-name';
 
 /**
  * PrisonerInfo editor component.
@@ -55,7 +67,7 @@ export class PrisonerInfoPartComponent
   public trJudgementEntries: ThesaurusEntry[] | undefined;
 
   constructor(authService: AuthJwtService, formBuilder: FormBuilder) {
-    super(authService);
+    super(authService, formBuilder);
     this.personName = {
       language: 'ita',
       pieces: [],
@@ -76,7 +88,14 @@ export class PrisonerInfoPartComponent
     this.judgement = formBuilder.control(null, Validators.maxLength(50));
     this.detStart = formBuilder.control(null);
     this.detEnd = formBuilder.control(null);
-    this.form = formBuilder.group({
+  }
+
+  public override ngOnInit(): void {
+    super.ngOnInit();
+  }
+
+  protected buildForm(formBuilder: FormBuilder): FormGroup | UntypedFormGroup {
+    return formBuilder.group({
       prisonerId: this.prisonerId,
       prisonId: this.prisonId,
       sex: this.sex,
@@ -91,94 +110,84 @@ export class PrisonerInfoPartComponent
     });
   }
 
-  public ngOnInit(): void {
-    this.initEditor();
+  private updateThesauri(thesauri: ThesauriSet): void {
+    let key = 'person-name-languages';
+    if (this.hasThesaurus(key)) {
+      this.pnLangEntries = thesauri[key].entries;
+    } else {
+      this.pnLangEntries = undefined;
+    }
+
+    key = 'person-name-tags';
+    if (this.hasThesaurus(key)) {
+      this.pnTagEntries = thesauri[key].entries;
+    } else {
+      this.pnTagEntries = undefined;
+    }
+
+    key = 'person-name-types';
+    if (this.hasThesaurus(key)) {
+      this.pnTypeEntries = thesauri[key].entries;
+    } else {
+      this.pnTypeEntries = undefined;
+    }
+
+    key = 'trial-charges';
+    if (this.hasThesaurus(key)) {
+      this.trChargeEntries = thesauri[key].entries;
+    } else {
+      this.trChargeEntries = undefined;
+    }
+
+    key = 'trial-judgements';
+    if (this.hasThesaurus(key)) {
+      this.trJudgementEntries = thesauri[key].entries;
+    } else {
+      this.trJudgementEntries = undefined;
+    }
   }
 
-  private updateForm(model: PrisonerInfoPart): void {
-    if (!model) {
-      this.form?.reset();
+  private updateForm(part?: PrisonerInfoPart): void {
+    if (!part) {
+      this.form.reset();
       return;
     }
-    this.prisonerId.setValue(model.prisonerId);
+    this.prisonerId.setValue(part.prisonerId);
     // setting the original prison ID will cause
     // the lookup bound to prisonId to fetch the
     // corresponding data pin and thus set prisonId back
-    this.orPrisonId = model.prisonId;
+    this.orPrisonId = part.prisonId;
     // this.prisonId.setValue(model.prisonId);
-    this.sex.setValue(model.sex || null);
-    this.name.setValue(model.name || null);
-    this.origin.setValue(model.origin || null);
-    this.birth.setValue(model.birthDate || null);
-    this.death.setValue(model.deathDate || null);
-    this.charge.setValue(model.charge || null);
-    this.judgement.setValue(model.judgement || null);
-    this.detStart.setValue(model.detentionStart || null);
-    this.detEnd.setValue(model.detentionEnd || null);
-    this.form?.markAsPristine();
+    this.sex.setValue(part.sex || null);
+    this.name.setValue(part.name || null);
+    this.origin.setValue(part.origin || null);
+    this.birth.setValue(part.birthDate || null);
+    this.death.setValue(part.deathDate || null);
+    this.charge.setValue(part.charge || null);
+    this.judgement.setValue(part.judgement || null);
+    this.detStart.setValue(part.detentionStart || null);
+    this.detEnd.setValue(part.detentionEnd || null);
+    this.form.markAsPristine();
   }
 
   public onPersonNameChange(name: AssertedProperName | undefined): void {
     this.name.setValue(name || null);
   }
 
-  protected onModelSet(model: PrisonerInfoPart): void {
-    this.updateForm(deepCopy(model));
+  protected override onDataSet(data?: EditedObject<PrisonerInfoPart>): void {
+    // thesauri
+    if (data?.thesauri) {
+      this.updateThesauri(data.thesauri);
+    }
+
+    // form
+    this.updateForm(data?.value);
   }
 
-  protected onThesauriSet(): void {
-    let key = 'person-name-languages';
-    if (this.thesauri && this.thesauri[key]) {
-      this.pnLangEntries = this.thesauri[key].entries;
-    } else {
-      this.pnLangEntries = undefined;
-    }
-
-    key = 'person-name-tags';
-    if (this.thesauri && this.thesauri[key]) {
-      this.pnTagEntries = this.thesauri[key].entries;
-    } else {
-      this.pnTagEntries = undefined;
-    }
-
-    key = 'person-name-types';
-    if (this.thesauri && this.thesauri[key]) {
-      this.pnTypeEntries = this.thesauri[key].entries;
-    } else {
-      this.pnTypeEntries = undefined;
-    }
-
-    key = 'trial-charges';
-    if (this.thesauri && this.thesauri[key]) {
-      this.trChargeEntries = this.thesauri[key].entries;
-    } else {
-      this.trChargeEntries = undefined;
-    }
-
-    key = 'trial-judgements';
-    if (this.thesauri && this.thesauri[key]) {
-      this.trJudgementEntries = this.thesauri[key].entries;
-    } else {
-      this.trJudgementEntries = undefined;
-    }
-  }
-
-  protected getModelFromForm(): PrisonerInfoPart {
-    let part = this.model;
-    if (!part) {
-      part = {
-        itemId: this.itemId || '',
-        id: '',
-        typeId: PRISONER_INFO_PART_TYPEID,
-        roleId: this.roleId,
-        timeCreated: new Date(),
-        creatorId: '',
-        timeModified: new Date(),
-        userId: '',
-        prisonerId: '',
-        prisonId: '',
-      };
-    }
+  protected getValue(): PrisonerInfoPart {
+    let part = this.getEditedPart(
+      PRISONER_INFO_PART_TYPEID
+    ) as PrisonerInfoPart;
     part.prisonerId = this.prisonerId.value?.trim() || '';
     part.prisonId = this.prisonId.value?.value || '';
     part.sex = this.sex.value || '';

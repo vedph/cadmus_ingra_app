@@ -1,5 +1,5 @@
-<form [formGroup]="form!" (submit)="save()">
-  <mat-card>
+<form [formGroup]="form" (submit)="save()">
+  <mat-card appearance="outlined">
     <mat-card-header>
       <div mat-card-avatar>
         <mat-icon>picture_in_picture</mat-icon>
@@ -12,7 +12,8 @@
           <div>
             <!-- graffitiId -->
             <mat-form-field>
-              <input matInput [formControl]="graffitiId" placeholder="ID" />
+              <mat-label>ID</mat-label>
+              <input matInput [formControl]="graffitiId" />
               <mat-error
                 *ngIf="
                   graffitiId.errors?.required &&
@@ -39,7 +40,8 @@
             &nbsp;
             <!-- language (bound) -->
             <mat-form-field *ngIf="langEntries?.length" style="width: 8em">
-              <mat-select [formControl]="language" placeholder="language">
+              <mat-label>language</mat-label>
+              <mat-select [formControl]="language">
                 <mat-option *ngFor="let e of langEntries" [value]="e.id">{{
                   e.value
                 }}</mat-option>
@@ -62,7 +64,8 @@
 
             <!-- language (free) -->
             <mat-form-field *ngIf="!langEntries?.length" style="width: 8em">
-              <input matInput [formControl]="language" placeholder="language" />
+              <mat-label>language</mat-label>
+              <input matInput [formControl]="language" />
               <mat-error
                 *ngIf="
                   language.errors?.required &&
@@ -82,7 +85,8 @@
           <div>
             <!-- verse (bound) -->
             <mat-form-field *ngIf="verseEntries?.length" style="width: 8em">
-              <mat-select [formControl]="verse" placeholder="verse">
+              <mat-label>verse</mat-label>
+              <mat-select [formControl]="verse">
                 <mat-option [value]="null">(none)</mat-option>
                 <mat-option *ngFor="let e of verseEntries" [value]="e.id">{{
                   e.value
@@ -92,7 +96,8 @@
 
             <!-- verse (free) -->
             <mat-form-field *ngIf="!verseEntries?.length" style="width: 8em">
-              <input matInput [formControl]="verse" placeholder="verse" />
+              <mat-label>verse</mat-label>
+              <input matInput [formControl]="verse" />
               <mat-error
                 *ngIf="verse.errors?.required && (verse.dirty || verse.touched)"
                 >verse required</mat-error
@@ -108,7 +113,8 @@
             &nbsp;
             <!-- rhyme -->
             <mat-form-field>
-              <input matInput [formControl]="rhyme" placeholder="rhyme" />
+              <mat-label>rhyme</mat-label>
+              <input matInput [formControl]="rhyme" />
               <mat-error
                 *ngIf="
                   rhyme.errors?.maxLength && (rhyme.dirty || rhyme.touched)
@@ -184,7 +190,8 @@
 
                 <!-- child controls -->
                 <mat-form-field>
-                  <input matInput formControlName="id" placeholder="ID" />
+                  <mat-label>ID</mat-label>
+                  <input matInput formControlName="id" />
                   <mat-error
                     *ngIf="
                       $any(item)['controls'].id.errors?.required &&

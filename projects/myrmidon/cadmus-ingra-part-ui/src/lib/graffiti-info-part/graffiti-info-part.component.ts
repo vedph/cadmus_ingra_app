@@ -5,10 +5,11 @@ import {
   Validators,
   FormArray,
   FormGroup,
+  UntypedFormGroup,
 } from '@angular/forms';
 
-import { ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
-import { ThesaurusEntry } from '@myrmidon/cadmus-core';
+import { EditedObject, ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
+import { ThesauriSet, ThesaurusEntry } from '@myrmidon/cadmus-core';
 
 import {
   GraffitiInfoPart,
@@ -16,7 +17,6 @@ import {
   RankedId,
 } from '../graffiti-info-part';
 import { AuthJwtService } from '@myrmidon/auth-jwt-login';
-import { deepCopy } from '@myrmidon/ng-tools';
 import { HistoricalDateModel } from '@myrmidon/cadmus-refs-historical-date';
 
 /**
@@ -44,11 +44,8 @@ export class GraffitiInfoPartComponent
   public langEntries: ThesaurusEntry[] | undefined;
   public verseEntries: ThesaurusEntry[] | undefined;
 
-  constructor(
-    authService: AuthJwtService,
-    private _formBuilder: FormBuilder
-  ) {
-    super(authService);
+  constructor(authService: AuthJwtService, private _formBuilder: FormBuilder) {
+    super(authService, _formBuilder);
     this.graffitiId = _formBuilder.control(null, [
       Validators.required,
       Validators.maxLength(50),
@@ -63,8 +60,14 @@ export class GraffitiInfoPartComponent
     this.author = _formBuilder.control(null, Validators.maxLength(50));
     this.idents = _formBuilder.array([]);
     this.date = _formBuilder.control(null);
-    // form
-    this.form = _formBuilder.group({
+  }
+
+  public override ngOnInit(): void {
+    super.ngOnInit();
+  }
+
+  protected buildForm(formBuilder: FormBuilder): FormGroup | UntypedFormGroup {
+    return formBuilder.group({
       graffitiId: this.graffitiId,
       language: this.language,
       verse: this.verse,
@@ -75,8 +78,20 @@ export class GraffitiInfoPartComponent
     });
   }
 
-  public ngOnInit(): void {
-    this.initEditor();
+  private updateThesauri(thesauri: ThesauriSet): void {
+    let key = 'graffiti-languages';
+    if (this.hasThesaurus(key)) {
+      this.langEntries = thesauri[key].entries;
+    } else {
+      this.langEntries = undefined;
+    }
+
+    key = 'graffiti-verses';
+    if (this.hasThesaurus(key)) {
+      this.verseEntries = thesauri[key].entries;
+    } else {
+      this.verseEntries = undefined;
+    }
   }
 
   private getIdentGroup(rid?: RankedId): FormGroup {
@@ -132,62 +147,40 @@ export class GraffitiInfoPartComponent
     return entries.length ? entries : undefined;
   }
 
-  private updateForm(model: GraffitiInfoPart): void {
-    if (!model) {
-      this.form?.reset();
+  private updateForm(part?: GraffitiInfoPart): void {
+    if (!part) {
+      this.form.reset();
       return;
     }
-    this.graffitiId.setValue(model.graffitiId);
-    this.language.setValue(model.language);
-    this.verse.setValue(model.verse || null);
-    this.rhyme.setValue(model.rhyme || null);
-    this.author.setValue(model.author || null);
+    this.graffitiId.setValue(part.graffitiId);
+    this.language.setValue(part.language);
+    this.verse.setValue(part.verse || null);
+    this.rhyme.setValue(part.rhyme || null);
+    this.author.setValue(part.author || null);
     this.idents.clear();
-    if (model.identifications) {
-      for (let i of model.identifications) {
+    if (part.identifications) {
+      for (let i of part.identifications) {
         this.idents.controls.push(this.getIdentGroup(i));
       }
     }
-    this.date.setValue(model.date || null);
-    this.form?.markAsPristine();
+    this.date.setValue(part.date || null);
+    this.form.markAsPristine();
   }
 
-  protected onModelSet(model: GraffitiInfoPart): void {
-    this.updateForm(deepCopy(model));
+  protected override onDataSet(data?: EditedObject<GraffitiInfoPart>): void {
+    // thesauri
+    if (data?.thesauri) {
+      this.updateThesauri(data.thesauri);
+    }
+
+    // form
+    this.updateForm(data?.value);
   }
 
-  protected onThesauriSet(): void {
-    let key = 'graffiti-languages';
-    if (this.thesauri && this.thesauri[key]) {
-      this.langEntries = this.thesauri[key].entries;
-    } else {
-      this.langEntries = undefined;
-    }
-
-    key = 'graffiti-verses';
-    if (this.thesauri && this.thesauri[key]) {
-      this.verseEntries = this.thesauri[key].entries;
-    } else {
-      this.verseEntries = undefined;
-    }
-  }
-
-  protected getModelFromForm(): GraffitiInfoPart {
-    let part = this.model;
-    if (!part) {
-      part = {
-        itemId: this.itemId || '',
-        id: '',
-        typeId: GRAFFITI_INFO_PART_TYPEID,
-        roleId: this.roleId,
-        timeCreated: new Date(),
-        creatorId: '',
-        timeModified: new Date(),
-        userId: '',
-        graffitiId: '',
-        language: '',
-      };
-    }
+  protected getValue(): GraffitiInfoPart {
+    let part = this.getEditedPart(
+      GRAFFITI_INFO_PART_TYPEID
+    ) as GraffitiInfoPart;
     part.graffitiId = this.graffitiId.value?.trim() || '';
     part.language = this.language.value?.trim() || '';
     part.verse = this.verse.value?.trim();

@@ -1,5 +1,5 @@
-<form [formGroup]="form!" (submit)="save()">
-  <mat-card>
+<form [formGroup]="form" (submit)="save()">
+  <mat-card appearance="outlined">
     <mat-card-header>
       <div mat-card-avatar>
         <mat-icon>picture_in_picture</mat-icon>
@@ -12,11 +12,8 @@
           <div>
             <!-- prisonerId -->
             <mat-form-field>
-              <input
-                matInput
-                [formControl]="prisonerId"
-                placeholder="prisoner ID"
-              />
+              <mat-label>prisoner ID</mat-label>
+              <input matInput [formControl]="prisonerId" />
               <mat-error
                 *ngIf="
                   prisonerId.errors?.required &&
@@ -42,8 +39,9 @@
 
             &nbsp;
             <!-- sex -->
-            <mat-form-field style="width: 5em">
-              <mat-select [formControl]="sex" placeholder="sex">
+            <mat-form-field style="width: 6em">
+              <mat-label>sex</mat-label>
+              <mat-select [formControl]="sex">
                 <mat-option [value]="undefined">---</mat-option>
                 <mat-option [value]="'M'">male</mat-option>
                 <mat-option [value]="'F'">female</mat-option>
@@ -72,7 +70,8 @@
           <div>
             <!-- origin -->
             <mat-form-field>
-              <input matInput [formControl]="origin" placeholder="origin" />
+              <mat-label>origin</mat-label>
+              <input matInput [formControl]="origin" />
               <mat-error
                 *ngIf="
                   origin.errors?.maxLength && (origin.dirty || origin.touched)
@@ -102,7 +101,8 @@
           <div>
             <!-- charge (bound) -->
             <mat-form-field *ngIf="trChargeEntries?.length">
-              <mat-select [formControl]="charge" placeholder="charge">
+              <mat-label>charge</mat-label>
+              <mat-select [formControl]="charge">
                 <mat-option *ngFor="let e of trChargeEntries" [value]="e.id">{{
                   e.value
                 }}</mat-option>
@@ -111,7 +111,8 @@
 
             <!-- charge (free) -->
             <mat-form-field *ngIf="!trChargeEntries?.length">
-              <input matInput [formControl]="charge" placeholder="charge" />
+              <mat-label>charge</mat-label>
+              <input matInput [formControl]="charge" />
               <mat-error
                 *ngIf="
                   charge.errors?.maxLength && (charge.dirty || charge.touched)
@@ -123,7 +124,8 @@
           <div>
             <!-- judgement (bound) -->
             <mat-form-field *ngIf="trJudgementEntries?.length">
-              <mat-select [formControl]="judgement" placeholder="judgement">
+              <mat-label>judgement</mat-label>
+              <mat-select [formControl]="judgement">
                 <mat-option
                   *ngFor="let e of trJudgementEntries"
                   [value]="e.id"
@@ -134,11 +136,8 @@
 
             <!-- judgement (free) -->
             <mat-form-field *ngIf="!trJudgementEntries?.length">
-              <input
-                matInput
-                [formControl]="judgement"
-                placeholder="judgement"
-              />
+              <mat-label>judgement</mat-label>
+              <input matInput [formControl]="judgement" />
               <mat-error
                 *ngIf="
                   judgement.errors?.maxLength &&

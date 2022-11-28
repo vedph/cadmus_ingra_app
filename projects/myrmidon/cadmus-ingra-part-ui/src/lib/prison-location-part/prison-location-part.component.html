@@ -1,5 +1,5 @@
-<form [formGroup]="form!" (submit)="save()">
-  <mat-card>
+<form [formGroup]="form" (submit)="save()">
+  <mat-card appearance="outlined">
     <mat-card-header>
       <div mat-card-avatar>
         <mat-icon>picture_in_picture</mat-icon>
@@ -19,7 +19,8 @@
       <div>
         <!-- cell -->
         <mat-form-field>
-          <input matInput [formControl]="cell" placeholder="cell" />
+          <mat-label>cell</mat-label>
+          <input matInput [formControl]="cell" />
           <mat-error
             *ngIf="cell.errors?.required && (cell.dirty || cell.touched)"
             >cell required</mat-error
@@ -33,7 +34,8 @@
       <div>
         <!-- location -->
         <mat-form-field>
-          <input matInput [formControl]="location" placeholder="location" />
+          <mat-label>location</mat-label>
+          <input matInput [formControl]="location" />
           <mat-error
             *ngIf="
               location.errors?.required && (location.dirty || location.touched)

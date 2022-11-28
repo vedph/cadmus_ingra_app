@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormBuilder,
+  Validators,
+  FormGroup,
+  UntypedFormGroup,
+} from '@angular/forms';
 import { AuthJwtService } from '@myrmidon/auth-jwt-login';
 
-import { ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
-import { deepCopy } from '@myrmidon/ng-tools';
+import { EditedObject, ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
 
 import { PrisonInfoPart, PRISON_INFO_PART_TYPEID } from '../prison-info-part';
 
@@ -24,7 +29,7 @@ export class PrisonInfoPartComponent
   public place: FormControl<string | null>;
 
   constructor(authService: AuthJwtService, formBuilder: FormBuilder) {
-    super(authService);
+    super(authService, formBuilder);
     // form
     this.prisonId = formBuilder.control(null, [
       Validators.required,
@@ -35,46 +40,35 @@ export class PrisonInfoPartComponent
       Validators.required,
       Validators.maxLength(200),
     ]);
-    this.form = formBuilder.group({
+  }
+
+  public override ngOnInit(): void {
+    super.ngOnInit();
+  }
+
+  protected buildForm(formBuilder: FormBuilder): FormGroup | UntypedFormGroup {
+    return formBuilder.group({
       prisonId: this.prisonId,
       place: this.place,
     });
   }
 
-  public ngOnInit(): void {
-    this.initEditor();
-  }
-
-  private updateForm(model: PrisonInfoPart): void {
-    if (!model) {
-      this.form?.reset();
+  private updateForm(part?: PrisonInfoPart): void {
+    if (!part) {
+      this.form.reset();
       return;
     }
-    this.prisonId.setValue(model.prisonId);
-    this.place.setValue(model.place);
-    this.form?.markAsPristine();
+    this.prisonId.setValue(part.prisonId);
+    this.place.setValue(part.place);
+    this.form.markAsPristine();
   }
 
-  protected onModelSet(model: PrisonInfoPart): void {
-    this.updateForm(deepCopy(model));
+  protected override onDataSet(data?: EditedObject<PrisonInfoPart>): void {
+    this.updateForm(data?.value);
   }
 
-  protected getModelFromForm(): PrisonInfoPart {
-    let part = this.model;
-    if (!part) {
-      part = {
-        itemId: this.itemId || '',
-        id: '',
-        typeId: PRISON_INFO_PART_TYPEID,
-        roleId: this.roleId,
-        timeCreated: new Date(),
-        creatorId: '',
-        timeModified: new Date(),
-        userId: '',
-        prisonId: '',
-        place: '',
-      };
-    }
+  protected getValue(): PrisonInfoPart {
+    let part = this.getEditedPart(PRISON_INFO_PART_TYPEID) as PrisonInfoPart;
     part.prisonId = this.prisonId.value?.trim() || '';
     part.place = this.place.value?.trim() || '';
     return part;

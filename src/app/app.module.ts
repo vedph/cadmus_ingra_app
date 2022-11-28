@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -37,8 +37,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-// akita
-import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
+// ELF
+import { devTools } from '@ngneat/elf-devtools';
+import { Actions } from '@ngneat/effects-ng';
+
 // ngx-monaco
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 // ngx-markdown
@@ -52,6 +54,7 @@ import {
   AuthJwtLoginModule,
 } from '@myrmidon/auth-jwt-login';
 import { AuthJwtAdminModule } from '@myrmidon/auth-jwt-admin';
+import { NgxDirtyCheckModule } from '@myrmidon/ngx-dirty-check';
 
 // cadmus bricks
 import { CadmusRefsAssertionModule } from '@myrmidon/cadmus-refs-assertion';
@@ -83,6 +86,16 @@ import { RegisterUserPageComponent } from './register-user-page/register-user-pa
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { PART_EDITOR_KEYS } from './part-editor-keys';
 import { INDEX_LOOKUP_DEFINITIONS } from './index-lookup-definitions';
+
+// https://ngneat.github.io/elf/docs/dev-tools/
+export function initElfDevTools(actions: Actions) {
+  return () => {
+    devTools({
+      name: 'Cadmus INGRA',
+      actionsDispatcher: actions,
+    });
+  };
+}
 
 @NgModule({
   declarations: [
@@ -132,8 +145,6 @@ import { INDEX_LOOKUP_DEFINITIONS } from './index-lookup-definitions';
     MatToolbarModule,
     MatTreeModule,
     FlexLayoutModule,
-    // akita
-    AkitaNgDevtools.forRoot(),
     // monaco
     MonacoEditorModule.forRoot(),
     // markdown
@@ -143,6 +154,7 @@ import { INDEX_LOOKUP_DEFINITIONS } from './index-lookup-definitions';
     NgMatToolsModule,
     AuthJwtLoginModule,
     AuthJwtAdminModule,
+    NgxDirtyCheckModule,
     // cadmus bricks
     CadmusRefsAssertionModule,
     CadmusRefsDocReferencesModule,
@@ -160,7 +172,7 @@ import { INDEX_LOOKUP_DEFINITIONS } from './index-lookup-definitions';
     CadmusUiPgModule,
     CadmusTextBlockViewModule,
     CadmusPreviewUiModule,
-    CadmusPreviewPgModule
+    CadmusPreviewPgModule,
   ],
   providers: [
     EnvServiceProvider,
@@ -182,6 +194,13 @@ import { INDEX_LOOKUP_DEFINITIONS } from './index-lookup-definitions';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthJwtInterceptor,
       multi: true,
+    },
+    // ELF dev tools
+    {
+      provide: APP_INITIALIZER,
+      multi: true,
+      useFactory: initElfDevTools,
+      deps: [Actions],
     },
   ],
   bootstrap: [AppComponent],

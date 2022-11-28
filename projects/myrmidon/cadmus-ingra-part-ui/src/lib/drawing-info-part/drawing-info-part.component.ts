@@ -5,10 +5,11 @@ import {
   Validators,
   FormArray,
   FormGroup,
+  UntypedFormGroup,
 } from '@angular/forms';
 
-import { ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
-import { CadmusValidators, ThesaurusEntry } from '@myrmidon/cadmus-core';
+import { EditedObject, ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
+import { ThesauriSet, ThesaurusEntry } from '@myrmidon/cadmus-core';
 
 import {
   DrawingInfoPart,
@@ -16,7 +17,7 @@ import {
   TaggedId,
 } from '../drawing-info-part';
 import { AuthJwtService } from '@myrmidon/auth-jwt-login';
-import { deepCopy } from '@myrmidon/ng-tools';
+import { deepCopy, NgToolsValidators } from '@myrmidon/ng-tools';
 import { HistoricalDateModel } from '@myrmidon/cadmus-refs-historical-date';
 import { Flag } from '@myrmidon/cadmus-ui-flags-picker';
 
@@ -58,18 +59,25 @@ export class DrawingInfoPartComponent
   };
 
   constructor(authService: AuthJwtService, private _formBuilder: FormBuilder) {
-    super(authService);
+    super(authService, _formBuilder);
     this.colorFlags = [];
     // form
     this.subjects = _formBuilder.control([], {
-      validators: CadmusValidators.strictMinLengthValidator(1),
+      validators: NgToolsValidators.strictMinLengthValidator(1),
       nonNullable: true,
     });
     this.description = _formBuilder.control(null, Validators.maxLength(1000));
     this.color = _formBuilder.control(null, Validators.maxLength(50));
     this.date = _formBuilder.control(null);
     this.links = _formBuilder.array([]);
-    this.form = _formBuilder.group({
+  }
+
+  public override ngOnInit(): void {
+    super.ngOnInit();
+  }
+
+  protected buildForm(formBuilder: FormBuilder): FormGroup | UntypedFormGroup {
+    return formBuilder.group({
       subjects: this.subjects,
       description: this.description,
       color: this.color,
@@ -78,36 +86,10 @@ export class DrawingInfoPartComponent
     });
   }
 
-  public ngOnInit(): void {
-    this.initEditor();
-  }
-
-  private updateForm(model: DrawingInfoPart): void {
-    if (!model) {
-      this.form?.reset();
-      return;
-    }
-    this.subjects.setValue(model.subjects || []);
-    this.description.setValue(model.description);
-    this.color.setValue(model.color || null);
-    this.date.setValue(model.date || null);
-    this.links.clear();
-    if (model.links) {
-      for (let l of model.links) {
-        this.links.controls.push(this.getLinkGroup(l));
-      }
-    }
-    this.form?.markAsPristine();
-  }
-
-  protected onModelSet(model: DrawingInfoPart): void {
-    this.updateForm(deepCopy(model));
-  }
-
-  protected onThesauriSet(): void {
+  private updateThesauri(thesauri: ThesauriSet): void {
     let key = 'drawing-subjects';
-    if (this.thesauri && this.thesauri[key]) {
-      this.dsEntries = this.thesauri[key].entries;
+    if (this.hasThesaurus(key)) {
+      this.dsEntries = thesauri[key].entries;
       this.colorFlags = this.dsEntries!.map((e) => {
         return { id: e.id, label: e.value } as Flag;
       });
@@ -117,41 +99,55 @@ export class DrawingInfoPartComponent
     }
 
     key = 'drawing-colors';
-    if (this.thesauri && this.thesauri[key]) {
-      this.dcEntries = this.thesauri[key].entries;
+    if (this.hasThesaurus(key)) {
+      this.dcEntries = thesauri[key].entries;
     } else {
       this.dcEntries = undefined;
     }
 
     key = 'link-reasons';
-    if (this.thesauri && this.thesauri[key]) {
-      this.dlEntries = this.thesauri[key].entries;
+    if (this.hasThesaurus(key)) {
+      this.dlEntries = thesauri[key].entries;
     } else {
       this.dlEntries = undefined;
     }
   }
 
-  protected getModelFromForm(): DrawingInfoPart {
-    let part = this.model;
+  private updateForm(part?: DrawingInfoPart): void {
     if (!part) {
-      part = {
-        itemId: this.itemId || '',
-        id: '',
-        typeId: DRAWING_INFO_PART_TYPEID,
-        roleId: this.roleId,
-        timeCreated: new Date(),
-        creatorId: '',
-        timeModified: new Date(),
-        userId: '',
-        description: '',
-        subjects: [],
-      };
+      this.form.reset();
+      return;
     }
-    part!.subjects = this.subjects.value;
-    part!.description = this.description.value || '';
-    part!.color = this.color.value || undefined;
-    part!.date = this.date.value || undefined;
-    part!.links = this.getLinks();
+    this.subjects.setValue(part.subjects || []);
+    this.description.setValue(part.description);
+    this.color.setValue(part.color || null);
+    this.date.setValue(part.date || null);
+    this.links.clear();
+    if (part.links) {
+      for (let l of part.links) {
+        this.links.controls.push(this.getLinkGroup(l));
+      }
+    }
+    this.form.markAsPristine();
+  }
+
+  protected override onDataSet(data?: EditedObject<DrawingInfoPart>): void {
+    // thesauri
+    if (data?.thesauri) {
+      this.updateThesauri(data.thesauri);
+    }
+
+    // form
+    this.updateForm(data?.value);
+  }
+
+  protected getValue(): DrawingInfoPart {
+    let part = this.getEditedPart(DRAWING_INFO_PART_TYPEID) as DrawingInfoPart;
+    part.subjects = this.subjects.value;
+    part.description = this.description.value || '';
+    part.color = this.color.value || undefined;
+    part.date = this.date.value || undefined;
+    part.links = this.getLinks();
 
     return part as DrawingInfoPart;
   }

@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormBuilder,
+  Validators,
+  FormGroup,
+  UntypedFormGroup,
+} from '@angular/forms';
 
-import { ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
+import { EditedObject, ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
 import { DataPinInfo } from '@myrmidon/cadmus-core';
 
 import {
@@ -9,7 +15,6 @@ import {
   PRISON_LOCATION_PART_TYPEID,
 } from '../prison-location-part';
 import { AuthJwtService } from '@myrmidon/auth-jwt-login';
-import { deepCopy } from '@myrmidon/ng-tools';
 
 /**
  * PrisonLocation editor component.
@@ -31,7 +36,7 @@ export class PrisonLocationPartComponent
   public orPrisonId: string | undefined;
 
   constructor(authService: AuthJwtService, formBuilder: FormBuilder) {
-    super(authService);
+    super(authService, formBuilder);
     // form
     this.prisonId = formBuilder.control(null, Validators.required);
     this.cell = formBuilder.control(null, [
@@ -43,53 +48,43 @@ export class PrisonLocationPartComponent
       Validators.maxLength(20),
       Validators.pattern('^[A-Z]+[0-9]+$'),
     ]);
-    this.form = formBuilder.group({
+  }
+
+  public override ngOnInit(): void {
+    super.ngOnInit();
+  }
+
+  protected buildForm(formBuilder: FormBuilder): FormGroup | UntypedFormGroup {
+    return formBuilder.group({
       prisonId: this.prisonId,
       cell: this.cell,
       location: this.location,
     });
   }
 
-  public ngOnInit(): void {
-    this.initEditor();
-  }
-
-  private updateForm(model: PrisonLocationPart): void {
-    if (!model) {
-      this.form?.reset();
+  private updateForm(part?: PrisonLocationPart): void {
+    if (!part) {
+      this.form.reset();
       return;
     }
     // setting the original prison ID will cause
     // the lookup bound to prisonId to fetch the
     // corresponding data pin and thus set prisonId back
-    this.orPrisonId = model.prisonId;
+    this.orPrisonId = part.prisonId;
     // this.prisonId.setValue(model.prisonId);
-    this.cell.setValue(model.cell);
-    this.location.setValue(model.location);
-    this.form?.markAsPristine();
+    this.cell.setValue(part.cell);
+    this.location.setValue(part.location);
+    this.form.markAsPristine();
   }
 
-  protected onModelSet(model: PrisonLocationPart): void {
-    this.updateForm(deepCopy(model));
+  protected override onDataSet(data?: EditedObject<PrisonLocationPart>): void {
+    this.updateForm(data?.value);
   }
 
-  protected getModelFromForm(): PrisonLocationPart {
-    let part = this.model;
-    if (!part) {
-      part = {
-        itemId: this.itemId || '',
-        id: '',
-        typeId: PRISON_LOCATION_PART_TYPEID,
-        roleId: this.roleId,
-        timeCreated: new Date(),
-        creatorId: '',
-        timeModified: new Date(),
-        userId: '',
-        prisonId: '',
-        cell: '',
-        location: '',
-      };
-    }
+  protected getValue(): PrisonLocationPart {
+    let part = this.getEditedPart(
+      PRISON_LOCATION_PART_TYPEID
+    ) as PrisonLocationPart;
     part.prisonId = this.prisonId.value?.value || '';
     part.cell = this.cell.value?.trim() || '';
     part.location = this.location.value?.trim() || '';
@@ -98,6 +93,6 @@ export class PrisonLocationPartComponent
 
   public onPrisonEntryChange(entry: DataPinInfo | null): void {
     this.prisonId.setValue(entry);
-    this.form?.markAsDirty();
+    this.form.markAsDirty();
   }
 }
