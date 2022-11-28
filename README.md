@@ -32,6 +32,10 @@ Production version:
 
 ## History
 
+- 2022-11-28:
+  - updated to Angular 15.
+  - replaced Akita with ELF.
+
 ### 1.2.1
 
 - 2022-10-10: more preview styles.
