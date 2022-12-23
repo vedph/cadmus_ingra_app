@@ -113,7 +113,7 @@ export class DrawingInfoPartComponent
     }
   }
 
-  private updateForm(part?: DrawingInfoPart): void {
+  private updateForm(part?: DrawingInfoPart | null): void {
     if (!part) {
       this.form.reset();
       return;

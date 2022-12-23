@@ -26,7 +26,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { PrisonInfoPartFeatureComponent } from './prison-info-part-feature/prison-info-part-feature.component';
 import { GraffitiInfoPartFeatureComponent } from './graffiti-info-part-feature/graffiti-info-part-feature.component';
@@ -91,7 +90,6 @@ export const RouterModuleForChild = RouterModule.forChild([
     MatSelectModule,
     MatTabsModule,
     MatTooltipModule,
-    FlexLayoutModule,
     // Cadmus
     RouterModuleForChild,
     CadmusCoreModule,

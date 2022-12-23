@@ -1,5 +1,12 @@
 # Cadmus Inquisition Graffiti App
 
+- [Cadmus Inquisition Graffiti App](#cadmus-inquisition-graffiti-app)
+  - [Docker](#docker)
+  - [History](#history)
+    - [1.2.1](#121)
+    - [1.2.0](#120)
+    - [1.1.0](#110)
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.6.
 
 ## Docker
@@ -32,6 +39,10 @@ Production version:
 
 ## History
 
+- 2022-12-23:
+  - updated packages.
+  - updated Monaco editor.
+  - removed Angular Flex Layout.
 - 2022-11-28:
   - updated to Angular 15.
   - replaced Akita with ELF.

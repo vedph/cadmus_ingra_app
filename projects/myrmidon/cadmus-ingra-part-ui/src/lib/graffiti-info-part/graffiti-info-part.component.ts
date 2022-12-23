@@ -147,7 +147,7 @@ export class GraffitiInfoPartComponent
     return entries.length ? entries : undefined;
   }
 
-  private updateForm(part?: GraffitiInfoPart): void {
+  private updateForm(part?: GraffitiInfoPart | null): void {
     if (!part) {
       this.form.reset();
       return;

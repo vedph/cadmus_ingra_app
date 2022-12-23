@@ -147,7 +147,7 @@ export class PrisonerInfoPartComponent
     }
   }
 
-  private updateForm(part?: PrisonerInfoPart): void {
+  private updateForm(part?: PrisonerInfoPart | null): void {
     if (!part) {
       this.form.reset();
       return;

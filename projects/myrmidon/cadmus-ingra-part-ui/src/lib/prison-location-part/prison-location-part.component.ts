@@ -62,7 +62,7 @@ export class PrisonLocationPartComponent
     });
   }
 
-  private updateForm(part?: PrisonLocationPart): void {
+  private updateForm(part?: PrisonLocationPart | null): void {
     if (!part) {
       this.form.reset();
       return;

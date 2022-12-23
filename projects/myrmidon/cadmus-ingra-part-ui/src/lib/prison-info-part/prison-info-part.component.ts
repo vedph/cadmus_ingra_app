@@ -53,7 +53,7 @@ export class PrisonInfoPartComponent
     });
   }
 
-  private updateForm(part?: PrisonInfoPart): void {
+  private updateForm(part?: PrisonInfoPart | null): void {
     if (!part) {
       this.form.reset();
       return;
