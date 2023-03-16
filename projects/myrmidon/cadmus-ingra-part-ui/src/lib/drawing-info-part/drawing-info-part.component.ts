@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   FormControl,
   FormBuilder,
@@ -7,19 +7,28 @@ import {
   FormGroup,
   UntypedFormGroup,
 } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 import { EditedObject, ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
 import { ThesauriSet, ThesaurusEntry } from '@myrmidon/cadmus-core';
+
+import { AuthJwtService } from '@myrmidon/auth-jwt-login';
+import { NgToolsValidators } from '@myrmidon/ng-tools';
+import { HistoricalDateModel } from '@myrmidon/cadmus-refs-historical-date';
+import { Flag, FlagsPickerAdapter } from '@myrmidon/cadmus-ui-flags-picker';
 
 import {
   DrawingInfoPart,
   DRAWING_INFO_PART_TYPEID,
   TaggedId,
 } from '../drawing-info-part';
-import { AuthJwtService } from '@myrmidon/auth-jwt-login';
-import { deepCopy, NgToolsValidators } from '@myrmidon/ng-tools';
-import { HistoricalDateModel } from '@myrmidon/cadmus-refs-historical-date';
-import { Flag } from '@myrmidon/cadmus-ui-flags-picker';
+
+function entryToFlag(entry: ThesaurusEntry): Flag {
+  return {
+    id: entry.id,
+    label: entry.value,
+  };
+}
 
 /**
  * DrawingInfo editor component.
@@ -35,14 +44,33 @@ export class DrawingInfoPartComponent
   extends ModelEditorComponentBase<DrawingInfoPart>
   implements OnInit
 {
-  public subjects: FormControl<string[]>;
+  private _dsEntries: ThesaurusEntry[];
+  private readonly _flagAdapter: FlagsPickerAdapter;
+
+  public subjects: FormControl<Flag[]>;
   public description: FormControl<string | null>;
   public color: FormControl<string | null>;
   public date: FormControl<HistoricalDateModel | null>;
   public links: FormArray;
 
+  public subjectFlags$: Observable<Flag[]>;
+
   // drawing-subjects
-  public dsEntries: ThesaurusEntry[] | undefined;
+  @Input()
+  public get dsEntries(): ThesaurusEntry[] | undefined {
+    return this._dsEntries;
+  }
+  public set dsEntries(value: ThesaurusEntry[] | undefined) {
+    if (this._dsEntries === value) {
+      return;
+    }
+    this._dsEntries = value || [];
+    this._flagAdapter.setSlotFlags(
+      'subjects',
+      this._dsEntries.map(entryToFlag)
+    );
+  }
+
   // drawing-colors
   public dcEntries: ThesaurusEntry[] | undefined;
   // link-reasons
@@ -61,6 +89,10 @@ export class DrawingInfoPartComponent
   constructor(authService: AuthJwtService, private _formBuilder: FormBuilder) {
     super(authService, _formBuilder);
     this.colorFlags = [];
+    this._dsEntries = [];
+    // flags
+    this._flagAdapter = new FlagsPickerAdapter();
+    this.subjectFlags$ = this._flagAdapter.selectFlags('subjects');
     // form
     this.subjects = _formBuilder.control([], {
       validators: NgToolsValidators.strictMinLengthValidator(1),
@@ -118,7 +150,9 @@ export class DrawingInfoPartComponent
       this.form.reset();
       return;
     }
-    this.subjects.setValue(part.subjects || []);
+    this.subjects.setValue(
+      this._flagAdapter.setSlotChecks('subjects', part.subjects)
+    );
     this.description.setValue(part.description);
     this.color.setValue(part.color || null);
     this.date.setValue(part.date || null);
@@ -143,8 +177,9 @@ export class DrawingInfoPartComponent
 
   protected getValue(): DrawingInfoPart {
     let part = this.getEditedPart(DRAWING_INFO_PART_TYPEID) as DrawingInfoPart;
-    part.subjects = this.subjects.value;
-    part.description = this.description.value || '';
+    (part.subjects =
+      this._flagAdapter.getOptionalCheckedFlagIds('subjects') || []),
+      (part.description = this.description.value || '');
     part.color = this.color.value || undefined;
     part.date = this.date.value || undefined;
     part.links = this.getLinks();
@@ -205,8 +240,8 @@ export class DrawingInfoPartComponent
     return entries.length ? entries : undefined;
   }
 
-  public onSubjectSelectionChange(ids: string[]): void {
-    this.subjects.setValue(ids || []);
+  public onSubjectFlagsChange(flags: Flag[]): void {
+    this.subjects.setValue(flags);
   }
 
   public onDateChange(date: HistoricalDateModel): void {

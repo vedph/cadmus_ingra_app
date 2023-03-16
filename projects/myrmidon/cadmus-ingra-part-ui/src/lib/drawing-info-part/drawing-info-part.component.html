@@ -13,14 +13,13 @@
             <!-- subjects (bound) -->
             <cadmus-ui-flags-picker
               [numbering]="true"
-              [flags]="colorFlags"
-              [selectedIds]="subjects.value"
-              (selectedIdsChange)="onSubjectSelectionChange($event)"
+              [flags]="subjectFlags$ | async"
+              (flagsChange)="onSubjectFlagsChange($event)"
             ></cadmus-ui-flags-picker>
           </div>
           <div>
             <!-- color (bound) -->
-            <mat-form-field *ngIf="dcEntries?.length" style="width: 8em">
+            <mat-form-field *ngIf="dcEntries?.length">
               <mat-label>color</mat-label>
               <mat-select [formControl]="color">
                 <mat-option [value]="null">---</mat-option>
@@ -31,7 +30,7 @@
             </mat-form-field>
 
             <!-- color (free) -->
-            <mat-form-field *ngIf="!dcEntries?.length" style="width: 8em">
+            <mat-form-field *ngIf="!dcEntries?.length">
               <mat-label>color</mat-label>
               <input matInput [formControl]="color" />
               <mat-error

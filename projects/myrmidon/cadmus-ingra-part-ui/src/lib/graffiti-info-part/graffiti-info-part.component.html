@@ -39,7 +39,7 @@
 
             &nbsp;
             <!-- language (bound) -->
-            <mat-form-field *ngIf="langEntries?.length" style="width: 8em">
+            <mat-form-field *ngIf="langEntries?.length">
               <mat-label>language</mat-label>
               <mat-select [formControl]="language">
                 <mat-option *ngFor="let e of langEntries" [value]="e.id">{{
@@ -63,7 +63,7 @@
             </mat-form-field>
 
             <!-- language (free) -->
-            <mat-form-field *ngIf="!langEntries?.length" style="width: 8em">
+            <mat-form-field *ngIf="!langEntries?.length">
               <mat-label>language</mat-label>
               <input matInput [formControl]="language" />
               <mat-error
@@ -84,7 +84,7 @@
           </div>
           <div>
             <!-- verse (bound) -->
-            <mat-form-field *ngIf="verseEntries?.length" style="width: 8em">
+            <mat-form-field *ngIf="verseEntries?.length">
               <mat-label>verse</mat-label>
               <mat-select [formControl]="verse">
                 <mat-option [value]="null">(none)</mat-option>
@@ -95,7 +95,7 @@
             </mat-form-field>
 
             <!-- verse (free) -->
-            <mat-form-field *ngIf="!verseEntries?.length" style="width: 8em">
+            <mat-form-field *ngIf="!verseEntries?.length">
               <mat-label>verse</mat-label>
               <input matInput [formControl]="verse" />
               <mat-error
@@ -126,7 +126,7 @@
           <div>
             <!-- date -->
             <cadmus-refs-historical-date
-              [date]="date?.value || undefined"
+              [date]="date.value || undefined"
               (dateChange)="onDateChange($event)"
             ></cadmus-refs-historical-date>
           </div>
