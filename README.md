@@ -39,6 +39,7 @@ Production version:
 
 ## History
 
+- 2023-05-19: updated Angular and packages.
 - 2023-03-16: updated packages.
 - 2022-12-23:
   - updated packages.
