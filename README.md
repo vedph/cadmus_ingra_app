@@ -3,6 +3,7 @@
 - [Cadmus Inquisition Graffiti App](#cadmus-inquisition-graffiti-app)
   - [Docker](#docker)
   - [History](#history)
+    - [2.0.0](#200)
     - [1.2.1](#121)
     - [1.2.0](#120)
     - [1.1.0](#110)
@@ -13,9 +14,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Quick Docker image build:
 
-1. `npm run build-lib`
-2. update version in `env.js` and `ng build --configuration production`
-3. `docker build . -t vedph2020/cadmus-ingra-app:1.2.1 -t vedph2020/cadmus-ingra-app:latest` (replace with the current version).
+1. `npm run build-lib`;
+2. update version in `env.js` and `ng build --configuration production`;
+3. `docker build . -t vedph2020/cadmus-ingra-app:2.0.0 -t vedph2020/cadmus-ingra-app:latest` (replace with the current version).
 
 Production version:
 
@@ -39,6 +40,9 @@ Production version:
 
 ## History
 
+### 2.0.0
+
+- 2023-07-02: moved to PostgreSQL.
 - 2023-05-19: updated Angular and packages.
 - 2023-03-16: updated packages.
 - 2022-12-23:

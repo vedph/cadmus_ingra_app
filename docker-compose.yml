@@ -2,92 +2,80 @@ version: '3.7'
 
 services:
   # MongoDB
-  cadmus-mongo:
+  cadmus-ingra-mongo:
     image: mongo
-    container_name: cadmus-mongo
+    container_name: cadmus-ingra-mongo
     environment:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
-    command: mongod --logpath=/dev/null # --quiet
+    command: mongod --logpath=/dev/null
     ports:
       - 27017:27017
     networks:
-      - cadmus-network
+      - cadmus-ingra-network
 
-  # MySql
-  # https://github.com/docker-library/docs/tree/master/mysql#mysql_database
-  # https://docs.docker.com/samples/library/mysql/#environment-variables
-  # https://github.com/docker-library/mysql/issues/275 (troubleshooting connection)
-  cadmus-mysql:
-    image: mysql
-    container_name: cadmus-mysql
-    # https://stackoverflow.com/questions/55559386/how-to-fix-mbind-operation-not-permitted-in-mysql-error-log
-    cap_add:
-      - SYS_NICE  # CAP_SYS_NICE
-    # https://github.com/docker-library/mysql/issues/454
-    command: --default-authentication-plugin=mysql_native_password
+  # PostgreSQL
+  cadmus-ingra-pgsql:
+    image: postgres
+    container_name: cadmus-ingra-pgsql
     environment:
-      # the password that will be set for the MySQL root superuser account
-      # Note: use dictionary like here rather than array (- name = value)
-      # or you might get MySql connection errors!
-      # https://stackoverflow.com/questions/37459031/connecting-to-a-docker-compose-mysql-container-denies-access-but-docker-running/37460872#37460872
-      MYSQL_ROOT_PASSWORD: mysql
-      MYSQL_ROOT_HOST: '%'
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
     ports:
-      - 3306:3306
+      - 5432:5432
     networks:
-      - cadmus-network
+      - cadmus-ingra-network
 
-  cadmus-api:
-    image: vedph2020/cadmus_ingra_api:2.0.3
+  # Cadmus API
+  cadmus-ingra-api:
+    image: vedph2020/cadmus-ingra-api:4.0.0
     ports:
-      # https://stackoverflow.com/questions/48669548/why-does-aspnet-core-start-on-port-80-from-within-docker
       - 39447:80
     depends_on:
-      - cadmus-mongo
-      - cadmus-mysql
-    # wait for mongo before starting: https://github.com/vishnubob/wait-for-it
-    # command: ["./wait-for-it.sh", "cadmus-mongo:27017", "--", "dotnet", "CadmusTgrApi.dll"]
+      - cadmus-ingra-mongo
+      - cadmus-ingra-index
     environment:
-      # for Windows use : as separator, for non Windows use __
-      # (see https://github.com/aspnet/Configuration/issues/469)
-      - CONNECTIONSTRINGS__DEFAULT=mongodb://cadmus-mongo:27017/{0}
-      - CONNECTIONSTRINGS__INDEX=Server=cadmus-mysql;port=3306;Database={0};Uid=root;Pwd=mysql
-      - SEED__INDEXDELAY=50
+      - CONNECTIONSTRINGS__DEFAULT=mongodb://cadmus-ingra-mongo:27017/{0}
+      - CONNECTIONSTRINGS__INDEX=Server=cadmus-ingra-pgsql;port=5432;Database={0};User Id=postgres;Password=postgres;Include Error Detail=True
+      - SEED__INDEXDELAY=25
       - MESSAGING__APIROOTURL=http://cadmusapi.azurewebsites.net
       - MESSAGING__APPROOTURL=http://cadmusapi.com/
       - MESSAGING__SUPPORTEMAIL=support@cadmus.com
-      - SERILOG__CONNECTIONSTRING=mongodb://cadmus-mongo:27017/{0}-log
+      - SERILOG__CONNECTIONSTRING=mongodb://cadmus-ingra-mongo:27017/{0}-log
       - STOCKUSERS__0__PASSWORD=P4ss-W0rd!
     networks:
-      - cadmus-network
+      - cadmus-ingra-network
 
+  # Biblio API
   cadmus-biblio-api:
-    image: vedph2020/cadmus_biblio_api:2.1.5
+    image: vedph2020/cadmus-biblio-api:5.0.0
+    container_name: cadmus-biblio-api
     ports:
       - 61691:80
     depends_on:
-      - cadmus-mongo
-      - cadmus-mysql
+      - cadmus-ingra-mongo
+      - cadmus-ingra-pgsql
     environment:
-      - CONNECTIONSTRINGS__DEFAULT=mongodb://cadmus-mongo:27017/{0}
-      - CONNECTIONSTRINGS__BIBLIO=Server=cadmus-mysql;port=3306;Database={0};Uid=root;Pwd=mysql
-      - SEED__BIBLIODELAY=50
-      - SEED__ENTITYCOUNT=3
-      - SERILOG__CONNECTIONSTRING=mongodb://cadmus-mongo:27017/{0}-log
+      - CONNECTIONSTRINGS__DEFAULT=mongodb://cadmus-ingra-mongo:27017/{0}
+      - CONNECTIONSTRINGS__INDEX=Server=cadmus-ingra-pgsql;port=5432;Database={0};User Id=postgres;Password=postgres;Include Error Detail=True
+      - SEED__INDEXDELAY=25
+      - SERILOG__CONNECTIONSTRING=mongodb://cadmus-ingra-mongo:27017/{0}-log
       - STOCKUSERS__0__PASSWORD=P4ss-W0rd!
     networks:
-      - cadmus-network
+      - cadmus-ingra-network
 
-  cadmus-web:
-    image: vedph2020/cadmus-ingra-app:1.2.1
+  # Cadmus app
+  cadmus-ingra-app:
+    image: vedph2020/cadmus-ingra-app:2.0.0
+    container_name: cadmus-ingra-app
     ports:
       - 4200:80
     depends_on:
-      - cadmus-api
+      - cadmus-ingra-api
     networks:
-      - cadmus-network
+      - cadmus-ingra-network
 
 networks:
-  cadmus-network:
+  cadmus-ingra-network:
     driver: bridge

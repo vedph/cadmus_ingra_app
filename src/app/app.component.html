@@ -33,7 +33,7 @@
     <span class="tb-fill-remaining-space"></span>
 
     <div *ngIf="user" fxLayout="row" fxLayoutAlign="start center">
-      <img [src]="getGravatarUrl(user.email, 32)" [alt]="user.userName" />
+      <img [src]="getGravatarUrl(user.email, 32)" alt="{{ user.userName }}" />
       <mat-icon
         class="small-icon"
         *ngIf="user && user.roles.includes('admin')"
@@ -80,9 +80,14 @@
   <div layout="row" layout-align="center center">
     <p>
       Cadmus by
-      <a href="https://www.fusisoft.net" target="_blank">Daniele Fusi</a> at
-      <a href="https://www.unive.it/pag/39287" target="_blank">VeDPH</a> -
-      version {{ version }}
+      <a rel="noopener" href="http://www.fusisoft.it" target="_blank"
+        >Daniele Fusi</a
+      >
+      at
+      <a rel="noopener" href="https://www.unive.it/pag/39287" target="_blank"
+        >VeDPH</a
+      >
+      - version {{ version }}
     </p>
   </div>
 </footer>
