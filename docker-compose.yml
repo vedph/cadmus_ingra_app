@@ -27,26 +27,6 @@ services:
     networks:
       - cadmus-ingra-network
 
-  # Cadmus API
-  cadmus-ingra-api:
-    image: vedph2020/cadmus-ingra-api:4.0.0
-    ports:
-      - 39447:80
-    depends_on:
-      - cadmus-ingra-mongo
-      - cadmus-ingra-index
-    environment:
-      - CONNECTIONSTRINGS__DEFAULT=mongodb://cadmus-ingra-mongo:27017/{0}
-      - CONNECTIONSTRINGS__INDEX=Server=cadmus-ingra-pgsql;port=5432;Database={0};User Id=postgres;Password=postgres;Include Error Detail=True
-      - SEED__INDEXDELAY=25
-      - MESSAGING__APIROOTURL=http://cadmusapi.azurewebsites.net
-      - MESSAGING__APPROOTURL=http://cadmusapi.com/
-      - MESSAGING__SUPPORTEMAIL=support@cadmus.com
-      - SERILOG__CONNECTIONSTRING=mongodb://cadmus-ingra-mongo:27017/{0}-log
-      - STOCKUSERS__0__PASSWORD=P4ss-W0rd!
-    networks:
-      - cadmus-ingra-network
-
   # Biblio API
   cadmus-biblio-api:
     image: vedph2020/cadmus-biblio-api:5.0.0
@@ -60,6 +40,26 @@ services:
       - CONNECTIONSTRINGS__DEFAULT=mongodb://cadmus-ingra-mongo:27017/{0}
       - CONNECTIONSTRINGS__INDEX=Server=cadmus-ingra-pgsql;port=5432;Database={0};User Id=postgres;Password=postgres;Include Error Detail=True
       - SEED__INDEXDELAY=25
+      - SERILOG__CONNECTIONSTRING=mongodb://cadmus-ingra-mongo:27017/{0}-log
+      - STOCKUSERS__0__PASSWORD=P4ss-W0rd!
+    networks:
+      - cadmus-ingra-network
+
+  # Cadmus API
+  cadmus-ingra-api:
+    image: vedph2020/cadmus-ingra-api:4.0.0
+    ports:
+      - 39447:80
+    depends_on:
+      - cadmus-ingra-mongo
+      - cadmus-ingra-pgsql
+    environment:
+      - CONNECTIONSTRINGS__DEFAULT=mongodb://cadmus-ingra-mongo:27017/{0}
+      - CONNECTIONSTRINGS__INDEX=Server=cadmus-ingra-pgsql;port=5432;Database={0};User Id=postgres;Password=postgres;Include Error Detail=True
+      - SEED__INDEXDELAY=25
+      - MESSAGING__APIROOTURL=http://cadmusapi.azurewebsites.net
+      - MESSAGING__APPROOTURL=http://cadmusapi.com/
+      - MESSAGING__SUPPORTEMAIL=support@cadmus.com
       - SERILOG__CONNECTIONSTRING=mongodb://cadmus-ingra-mongo:27017/{0}-log
       - STOCKUSERS__0__PASSWORD=P4ss-W0rd!
     networks:
