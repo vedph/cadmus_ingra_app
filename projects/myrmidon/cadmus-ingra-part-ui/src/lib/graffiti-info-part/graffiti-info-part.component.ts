@@ -3,25 +3,26 @@ import {
   FormControl,
   FormBuilder,
   Validators,
-  FormArray,
   FormGroup,
   UntypedFormGroup,
 } from '@angular/forms';
 
+import { AuthJwtService } from '@myrmidon/auth-jwt-login';
 import { EditedObject, ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
 import { ThesauriSet, ThesaurusEntry } from '@myrmidon/cadmus-core';
+import { HistoricalDateModel } from '@myrmidon/cadmus-refs-historical-date';
 
 import {
   GraffitiInfoPart,
   GRAFFITI_INFO_PART_TYPEID,
-  RankedId,
 } from '../graffiti-info-part';
-import { AuthJwtService } from '@myrmidon/auth-jwt-login';
-import { HistoricalDateModel } from '@myrmidon/cadmus-refs-historical-date';
+import { AssertedCompositeId } from '@myrmidon/cadmus-refs-asserted-ids';
 
 /**
  * GraffitiInfo editor component.
- * Thesauri: graffiti-languages, graffiti-verses (all optional).
+ * Thesauri: graffiti-languages, graffiti-verses, asserted-id-tags,
+ * asserted-id-scopes, chronotope-tags, assertion-tags, doc-reference-types,
+ * doc-reference-tags.
  */
 @Component({
   selector: 'ingra-graffiti-info-part',
@@ -38,11 +39,24 @@ export class GraffitiInfoPartComponent
   public rhyme: FormControl<string | null>;
   public date: FormControl<HistoricalDateModel | null>;
   public author: FormControl<string | null>;
-  public idents: FormArray;
+  public idents: FormControl<AssertedCompositeId[]>;
 
-  // languages
+  // graffiti-languages
   public langEntries: ThesaurusEntry[] | undefined;
+  // graffiti-verses
   public verseEntries: ThesaurusEntry[] | undefined;
+  // asserted-id-tags
+  public idTagEntries: ThesaurusEntry[] | undefined;
+  // asserted-id-scopes
+  public idScopeEntries: ThesaurusEntry[] | undefined;
+  // chronotope-tags
+  public ctTagEntries: ThesaurusEntry[] | undefined;
+  // assertion-tags
+  public assTagEntries: ThesaurusEntry[] | undefined;
+  // doc-reference-types
+  public refTypeEntries: ThesaurusEntry[] | undefined;
+  // doc-reference-tags
+  public refTagEntries: ThesaurusEntry[] | undefined;
 
   constructor(authService: AuthJwtService, private _formBuilder: FormBuilder) {
     super(authService, _formBuilder);
@@ -58,7 +72,7 @@ export class GraffitiInfoPartComponent
     this.verse = _formBuilder.control(null, Validators.maxLength(50));
     this.rhyme = _formBuilder.control(null, Validators.maxLength(50));
     this.author = _formBuilder.control(null, Validators.maxLength(50));
-    this.idents = _formBuilder.array([]);
+    this.idents = _formBuilder.control([], { nonNullable: true });
     this.date = _formBuilder.control(null);
   }
 
@@ -92,59 +106,48 @@ export class GraffitiInfoPartComponent
     } else {
       this.verseEntries = undefined;
     }
-  }
 
-  private getIdentGroup(rid?: RankedId): FormGroup {
-    return this._formBuilder.group({
-      id: this._formBuilder.control(rid?.id, [
-        Validators.required,
-        Validators.maxLength(50),
-        Validators.pattern('^[-a-zA-Z0-9_]+$'),
-      ]),
-      rank: this._formBuilder.control(0),
-    });
-  }
-
-  public addIdent(item?: RankedId): void {
-    this.idents.push(this.getIdentGroup(item));
-    this.idents.markAsDirty();
-  }
-
-  public removeIdent(index: number): void {
-    this.idents.removeAt(index);
-    this.idents.markAsDirty();
-  }
-
-  public moveIdentUp(index: number): void {
-    if (index < 1) {
-      return;
+    key = 'asserted-id-tags';
+    if (this.hasThesaurus(key)) {
+      this.idTagEntries = thesauri[key].entries;
+    } else {
+      this.idTagEntries = undefined;
     }
-    const item = this.idents.controls[index];
-    this.idents.removeAt(index);
-    this.idents.insert(index - 1, item);
-    this.idents.markAsDirty();
-  }
 
-  public moveIdentDown(index: number): void {
-    if (index + 1 >= this.idents.length) {
-      return;
+    key = 'asserted-id-scopes';
+    if (this.hasThesaurus(key)) {
+      this.idScopeEntries = thesauri[key].entries;
+    } else {
+      this.idScopeEntries = undefined;
     }
-    const item = this.idents.controls[index];
-    this.idents.removeAt(index);
-    this.idents.insert(index + 1, item);
-    this.idents.markAsDirty();
-  }
 
-  private getIdents(): RankedId[] | undefined {
-    const entries: RankedId[] = [];
-    for (let i = 0; i < this.idents.length; i++) {
-      const g = this.idents.at(i) as FormGroup;
-      entries.push({
-        id: g.controls.id.value?.trim(),
-        rank: g.controls.rank.value || 0,
-      });
+    key = 'chronotope-tags';
+    if (this.hasThesaurus(key)) {
+      this.ctTagEntries = thesauri[key].entries;
+    } else {
+      this.ctTagEntries = undefined;
     }
-    return entries.length ? entries : undefined;
+
+    key = 'assertion-tags';
+    if (this.hasThesaurus(key)) {
+      this.assTagEntries = thesauri[key].entries;
+    } else {
+      this.assTagEntries = undefined;
+    }
+
+    key = 'doc-reference-types';
+    if (this.hasThesaurus(key)) {
+      this.refTypeEntries = thesauri[key].entries;
+    } else {
+      this.refTypeEntries = undefined;
+    }
+
+    key = 'doc-reference-tags';
+    if (this.hasThesaurus(key)) {
+      this.refTagEntries = thesauri[key].entries;
+    } else {
+      this.refTagEntries = undefined;
+    }
   }
 
   private updateForm(part?: GraffitiInfoPart | null): void {
@@ -157,12 +160,7 @@ export class GraffitiInfoPartComponent
     this.verse.setValue(part.verse || null);
     this.rhyme.setValue(part.rhyme || null);
     this.author.setValue(part.author || null);
-    this.idents.clear();
-    if (part.identifications) {
-      for (let i of part.identifications) {
-        this.idents.controls.push(this.getIdentGroup(i));
-      }
-    }
+    this.idents.setValue(part.identifications || []);
     this.date.setValue(part.date || null);
     this.form.markAsPristine();
   }
@@ -186,7 +184,9 @@ export class GraffitiInfoPartComponent
     part.verse = this.verse.value?.trim();
     part.rhyme = this.rhyme.value?.trim();
     part.author = this.author.value?.trim();
-    part.identifications = this.getIdents();
+    part.identifications = this.idents.value?.length
+      ? this.idents.value
+      : undefined;
     part.date = this.date.value || undefined;
 
     return part;
@@ -194,5 +194,11 @@ export class GraffitiInfoPartComponent
 
   public onDateChange(date: HistoricalDateModel): void {
     this.date.setValue(date);
+  }
+
+  public onIdentsChange(ids: AssertedCompositeId[]): void {
+    this.idents.setValue(ids);
+    this.idents.markAsDirty();
+    this.idents.updateValueAndValidity();
   }
 }

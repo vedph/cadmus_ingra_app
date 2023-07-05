@@ -134,92 +134,34 @@
         <mat-tab label="author">
           <div>
             <!-- author -->
-          </div>
-          <h3>identifications</h3>
-          <div formArrayName="idents">
-            <div>
-              <button
-                type="button"
-                mat-flat-button
-                color="primary"
-                (click)="addIdent()"
+            <mat-form-field>
+              <mat-label>author</mat-label>
+              <input matInput [formControl]="author" />
+              <mat-error
+                *ngIf="
+                  $any(author).errors?.maxLength &&
+                  (author.dirty || author.touched)
+                "
+                >author too long</mat-error
               >
-                <mat-icon>add_circle</mat-icon>
-                add identification
-              </button>
-            </div>
-            <div
-              *ngFor="
-                let item of idents.controls;
-                let i = index;
-                let first = first;
-                let last = last
-              "
-            >
-              <!-- child form -->
-              <div [formGroupName]="i">
-                <!-- child actions -->
-                {{ i + 1 }}.
-                <button
-                  mat-icon-button
-                  type="button"
-                  matTooltip="Remove this identification"
-                  color="warn"
-                  (click)="removeIdent(i)"
-                >
-                  <mat-icon>remove_circle</mat-icon>
-                </button>
-                <button
-                  [disabled]="first"
-                  mat-icon-button
-                  type="button"
-                  matTooltip="Move identification up"
-                  (click)="moveIdentUp(i)"
-                >
-                  <mat-icon>arrow_upward</mat-icon>
-                </button>
-                <button
-                  [disabled]="last"
-                  mat-icon-button
-                  type="button"
-                  matTooltip="Move identification down"
-                  (click)="moveIdentDown(i)"
-                >
-                  <mat-icon>arrow_downward</mat-icon>
-                </button>
-
-                <!-- child controls -->
-                <mat-form-field>
-                  <mat-label>ID</mat-label>
-                  <input matInput formControlName="id" />
-                  <mat-error
-                    *ngIf="
-                      $any(item)['controls'].id.errors?.required &&
-                      ($any(item)['controls'].id.dirty ||
-                        $any(item)['controls'].id.touched)
-                    "
-                    >ID required</mat-error
-                  >
-                  <mat-error
-                    *ngIf="
-                      $any(item)['controls'].id.errors?.maxLength &&
-                      ($any(item)['controls'].id.dirty ||
-                        $any(item)['controls'].id.touched)
-                    "
-                    >ID too long</mat-error
-                  >
-                  <mat-error
-                    *ngIf="
-                      $any(item)['controls'].id.errors?.pattern &&
-                      ($any(item)['controls'].id.dirty ||
-                        $any(item)['controls'].id.touched)
-                    "
-                    >invalid ID</mat-error
-                  >
-                </mat-form-field>
-              </div>
-            </div>
+            </mat-form-field>
           </div>
+          <fieldset>
+            <legend>identifications</legend>
+            <cadmus-refs-asserted-composite-ids
+              [assTagEntries]="assTagEntries"
+              [idTagEntries]="idTagEntries"
+              [refTagEntries]="refTagEntries"
+              [idScopeEntries]="idScopeEntries"
+              [refTypeEntries]="refTypeEntries"
+              [canSwitchMode]="true"
+              [pinByTypeMode]="true"
+              defaultPartTypeKey="prisoner"
+              [ids]="idents.value"
+              (idsChange)="onIdentsChange($event)"
+            >
+            </cadmus-refs-asserted-composite-ids>
+          </fieldset>
         </mat-tab>
       </mat-tab-group>
     </mat-card-content>

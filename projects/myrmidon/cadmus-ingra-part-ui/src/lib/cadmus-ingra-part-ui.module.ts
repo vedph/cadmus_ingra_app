@@ -21,6 +21,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { NgToolsModule } from '@myrmidon/ng-tools';
 import { CadmusCoreModule } from '@myrmidon/cadmus-core';
+import { CadmusRefsAssertedIdsModule } from '@myrmidon/cadmus-refs-asserted-ids';
 import { CadmusRefsProperNameModule } from '@myrmidon/cadmus-refs-proper-name';
 import { CadmusRefsDecoratedIdsModule } from '@myrmidon/cadmus-refs-decorated-ids';
 import { CadmusRefsHistoricalDateModule } from '@myrmidon/cadmus-refs-historical-date';
@@ -63,6 +64,7 @@ import { DrawingInfoPartComponent } from './drawing-info-part/drawing-info-part.
     CadmusCoreModule,
     CadmusUiModule,
     CadmusUiFlagsPickerModule,
+    CadmusRefsAssertedIdsModule,
     CadmusRefsHistoricalDateModule,
     CadmusRefsDocReferencesModule,
     CadmusRefsProperNameModule,

@@ -1,13 +1,6 @@
-import { Part } from "@myrmidon/cadmus-core";
-import { HistoricalDateModel } from "@myrmidon/cadmus-refs-historical-date";
-
-/**
- * An ID with a rank, used in GraffitiInfoPart.
- */
-export interface RankedId {
-  id: string;
-  rank?: number;
-}
+import { Part } from '@myrmidon/cadmus-core';
+import { AssertedCompositeId } from '@myrmidon/cadmus-refs-asserted-ids';
+import { HistoricalDateModel } from '@myrmidon/cadmus-refs-historical-date';
 
 /**
  * The GraffitiInfo part model.
@@ -18,7 +11,7 @@ export interface GraffitiInfoPart extends Part {
   verse?: string;
   rhyme?: string;
   author?: string;
-  identifications?: RankedId[];
+  identifications?: AssertedCompositeId[];
   date?: HistoricalDateModel;
 }
 
@@ -96,20 +89,87 @@ export const GRAFFITI_INFO_PART_SCHEMA = {
     identifications: {
       type: 'array',
       items: {
-        anyOf: [
-          {
+        type: 'object',
+        default: {},
+        required: ['target'],
+        properties: {
+          target: {
             type: 'object',
-            required: ['id'],
+            required: ['gid', 'label'],
             properties: {
-              id: {
+              gid: {
+                type: 'string',
+              },
+              label: {
+                type: 'string',
+              },
+              itemId: {
+                type: 'string',
+              },
+              partId: {
+                type: 'string',
+              },
+              partTypeId: {
+                type: 'string',
+              },
+              roleId: {
+                type: 'string',
+              },
+              name: {
+                type: 'string',
+              },
+              value: {
+                type: 'string',
+              },
+            },
+          },
+          scope: {
+            type: 'string',
+          },
+          tag: {
+            type: 'string',
+          },
+          assertion: {
+            type: 'object',
+            required: ['rank'],
+            properties: {
+              tag: {
                 type: 'string',
               },
               rank: {
                 type: 'integer',
               },
+              note: {
+                type: 'string',
+              },
+              references: {
+                type: 'array',
+                items: {
+                  anyOf: [
+                    {
+                      type: 'object',
+                      required: ['citation'],
+                      properties: {
+                        type: {
+                          type: 'string',
+                        },
+                        tag: {
+                          type: 'string',
+                        },
+                        citation: {
+                          type: 'string',
+                        },
+                        note: {
+                          type: 'string',
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
             },
           },
-        ],
+        },
       },
     },
     date: {
