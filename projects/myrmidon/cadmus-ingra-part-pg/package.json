@@ -1,6 +1,6 @@
 {
   "name": "@myrmidon/cadmus-ingra-part-pg",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Cadmus - INGRA editor pages.",
   "keywords": [
     "Cadmus"
@@ -14,10 +14,10 @@
     "name": "Daniele Fusi"
   },
   "peerDependencies": {
-    "@angular/common": "^16.0.0",
-    "@angular/core": "^16.0.0",
-    "@angular/forms": "^16.0.0",
-    "@angular/router": "^16.0.0"
+    "@angular/common": "^17.0.0",
+    "@angular/core": "^17.0.0",
+    "@angular/forms": "^17.0.0",
+    "@angular/router": "^17.0.0"
   },
   "dependencies": {
     "tslib": "^2.5.0"

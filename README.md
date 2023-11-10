@@ -40,6 +40,10 @@ Production version:
 
 ## History
 
+- 2023-11-10:
+  - ⚠️ upgraded to Angular 17.
+  - opted in flags editor and thesauri import.
+  - removed ELF.
 - 2023-07-05: changed graffiti model for `identifications`, which are now of type `AssertedCompositeId`. This allows handling both internal and external references in the same way, with lookup for internal references.
 
 ### 2.0.0
